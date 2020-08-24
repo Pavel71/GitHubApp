@@ -20,6 +20,8 @@ class MainViewController: UITableViewController {
     sc.searchBar.becomeFirstResponder()
     return sc
   }()
+  var currentSearchText = ""
+  let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   
   // MARK: - Lyfe Cycle
   override func viewDidLoad() {
@@ -40,8 +42,25 @@ class MainViewController: UITableViewController {
 extension MainViewController : UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {
-    guard let text = searchController.searchBar.text else {return}
-    print(text)
+    // Нужна проверка на дубликаты чтобы не дублировать запрос дважды
+    guard
+      let text          = searchController.searchBar.text,
+      text.isEmpty      == false,
+      currentSearchText != text
+    else {return}
+    currentSearchText = text
+    
+    gitHubApi.fetchUsers(userName: text) { result in
+      
+      switch result {
+      case .success(let userSearchResult):
+        print(userSearchResult)
+      case .failure(let error):
+        self.showAlert(title: "Что-то пошло не так", message: error.localizedDescription)
+      }
+      
+      
+    }
   }
   
   

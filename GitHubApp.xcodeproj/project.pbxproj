@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0513C38C24F3E5B000991B55 /* GitHubApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513C38B24F3E5B000991B55 /* GitHubApi.swift */; };
+		0513C38E24F3ED7900991B55 /* GitHubUserNetwrokModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513C38D24F3ED7900991B55 /* GitHubUserNetwrokModel.swift */; };
+		0513C39024F3ED9A00991B55 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513C38F24F3ED9A00991B55 /* Repository.swift */; };
 		0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547A95824F3E1C400393BB4 /* MainViewController.swift */; };
 		0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869324F3CEE200CA14CF /* AppDelegate.swift */; };
 		0578869824F3CEE200CA14CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869724F3CEE200CA14CF /* ViewController.swift */; };
@@ -14,9 +17,15 @@
 		057886A024F3CEE700CA14CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0578869E24F3CEE700CA14CF /* LaunchScreen.storyboard */; };
 		057886A924F3CF7300CA14CF /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 057886A824F3CF7300CA14CF /* README.md */; };
 		057886AB24F3CFA800CA14CF /* Tasks.txt in Resources */ = {isa = PBXBuildFile; fileRef = 057886AA24F3CFA800CA14CF /* Tasks.txt */; };
+		058A758E24F3F9140053D361 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A758D24F3F9140053D361 /* ServiceLocator.swift */; };
+		058A759024F3FA010053D361 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A758F24F3FA010053D361 /* UIViewController+Extension.swift */; };
+		058A759224F3FA060053D361 /* UIView+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759124F3FA060053D361 /* UIView+ Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0513C38B24F3E5B000991B55 /* GitHubApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubApi.swift; sourceTree = "<group>"; };
+		0513C38D24F3ED7900991B55 /* GitHubUserNetwrokModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubUserNetwrokModel.swift; sourceTree = "<group>"; };
+		0513C38F24F3ED9A00991B55 /* Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		0547A95824F3E1C400393BB4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
 		0578869024F3CEE200CA14CF /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0578869324F3CEE200CA14CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +35,9 @@
 		057886A124F3CEE700CA14CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		057886A824F3CF7300CA14CF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		057886AA24F3CFA800CA14CF /* Tasks.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = Tasks.txt; sourceTree = "<group>"; };
+		058A758D24F3F9140053D361 /* ServiceLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
+		058A758F24F3FA010053D361 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		058A759124F3FA060053D361 /* UIView+ Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +51,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0513C38824F3E45600991B55 /* NetworkLayer */ = {
+			isa = PBXGroup;
+			children = (
+				0513C38B24F3E5B000991B55 /* GitHubApi.swift */,
+				0513C39124F3EDA300991B55 /* Models */,
+			);
+			path = NetworkLayer;
+			sourceTree = "<group>";
+		};
+		0513C39124F3EDA300991B55 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0513C38D24F3ED7900991B55 /* GitHubUserNetwrokModel.swift */,
+				0513C38F24F3ED9A00991B55 /* Repository.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		0547A95A24F3E1CB00393BB4 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
@@ -50,6 +80,7 @@
 		0547A95B24F3E1EF00393BB4 /* MainScreenController */ = {
 			isa = PBXGroup;
 			children = (
+				0513C38824F3E45600991B55 /* NetworkLayer */,
 				0547A95E24F3E20700393BB4 /* Model */,
 				0547A95D24F3E1FF00393BB4 /* View */,
 				0547A95C24F3E1FA00393BB4 /* Controller */,
@@ -101,6 +132,7 @@
 				057886A824F3CF7300CA14CF /* README.md */,
 				057886AA24F3CFA800CA14CF /* Tasks.txt */,
 				057886A724F3CEF800CA14CF /* SupportFiles */,
+				058A758A24F3F8C30053D361 /* HelpFiles */,
 				0547A95A24F3E1CB00393BB4 /* Screens */,
 				0578869724F3CEE200CA14CF /* ViewController.swift */,
 			);
@@ -116,6 +148,32 @@
 				057886A124F3CEE700CA14CF /* Info.plist */,
 			);
 			path = SupportFiles;
+			sourceTree = "<group>";
+		};
+		058A758A24F3F8C30053D361 /* HelpFiles */ = {
+			isa = PBXGroup;
+			children = (
+				058A758C24F3F8D70053D361 /* ServiceLocator */,
+				058A758B24F3F8CD0053D361 /* Extensions */,
+			);
+			path = HelpFiles;
+			sourceTree = "<group>";
+		};
+		058A758B24F3F8CD0053D361 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				058A759124F3FA060053D361 /* UIView+ Extension.swift */,
+				058A758F24F3FA010053D361 /* UIViewController+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		058A758C24F3F8D70053D361 /* ServiceLocator */ = {
+			isa = PBXGroup;
+			children = (
+				058A758D24F3F9140053D361 /* ServiceLocator.swift */,
+			);
+			path = ServiceLocator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,9 +248,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				058A759024F3FA010053D361 /* UIViewController+Extension.swift in Sources */,
 				0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
+				0513C39024F3ED9A00991B55 /* Repository.swift in Sources */,
+				0513C38C24F3E5B000991B55 /* GitHubApi.swift in Sources */,
+				058A759224F3FA060053D361 /* UIView+ Extension.swift in Sources */,
 				0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */,
+				0513C38E24F3ED7900991B55 /* GitHubUserNetwrokModel.swift in Sources */,
+				058A758E24F3F9140053D361 /* ServiceLocator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
