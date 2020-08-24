@@ -12,7 +12,7 @@ import UIKit
 extension UIViewController {
   
   
-  func showAlert(title: String, message: String) {
+  func showAlert(title: String = "Что-то пошло не так", message: String) {
     
     let alertControlelr = UIAlertController(title: title, message: message, preferredStyle: .alert)
     

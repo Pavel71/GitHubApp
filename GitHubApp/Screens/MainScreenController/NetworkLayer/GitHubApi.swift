@@ -62,7 +62,7 @@ struct APIConstants {
 // MARK: - EndPoint
 enum Endpoint {
   
-  case userSearch(searchFilter: String)
+  case userSearch(searchFilter: String,pages: Int)
   
   var baseURL : URL {URL(string: "https://api.github.com")!}
   
@@ -79,9 +79,10 @@ enum Endpoint {
           return nil
       }
       switch self {
-      case .userSearch(let searchFilter):
+      case .userSearch(let searchFilter,let pages):
         urlComponents.queryItems = [
-          URLQueryItem(name: "q", value: searchFilter.lowercased())
+          URLQueryItem(name: "q", value: searchFilter.lowercased()),
+          URLQueryItem(name: "per_page", value: "\(pages)")
         ]
     }
       return urlComponents.url
@@ -109,20 +110,23 @@ final class GitHubApi {
   }
   // MARK: - Fetch Users
   func fetchUsers(userName: String,
+                  pages   : Int,
                   completion: @escaping (Result<UsersSearchResult,GitHubApiError>) -> Void
                   ) {
     
-    let endpoint:Endpoint = .userSearch(searchFilter: userName)
+    let endpoint:Endpoint = .userSearch(searchFilter: userName, pages: pages)
     
     fetch(endPoint: endpoint) { data,response, error in
       // Error
       if let error = error {
         completion(.failure(.apiError(error)))
+        return
       }
       // HTTP Response
       if let httpResponse  = response as? HTTPURLResponse,
         httpResponse.statusCode != 200 {
         completion(.failure(.responseError(httpResponse.statusCode)))
+        return
       }
       // Data
       if let data  = data {
@@ -133,6 +137,7 @@ final class GitHubApi {
           completion(.success(res))
         } else {
           completion(.failure(.decodingError))
+          return
         }
       
       }

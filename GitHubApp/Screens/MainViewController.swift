@@ -21,13 +21,17 @@ class MainViewController: UITableViewController {
     sc.searchBar.becomeFirstResponder()
     return sc
   }()
-  var currentSearchText = ""
-  let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
+  
+  // MARK: ViewModel
+  
+  var viewModel = MainScreenViewModel()
   
   // MARK: DataSource
   
   var users : [GitHubUser] = [] {
-    didSet {tableView.reloadData()}
+    didSet {
+      self.tableView.reloadData()
+    }
   }
   
   // MARK: - Lyfe Cycle
@@ -44,6 +48,23 @@ class MainViewController: UITableViewController {
     navigationItem.hidesSearchBarWhenScrolling = false
   }
   
+  @objc func fetchUsers(text: String) {
+     viewModel.fetchUser(filteringText: text) { result in
+        
+        switch result {
+        case .success(let users):
+          self.users = users
+        case .failure(let error):
+          print(error.localizedDescription)
+          
+          DispatchQueue.main.async {
+            self.showAlert(message: error.localizedDescription)
+          }
+          
+        }
+      }
+   }
+  
   
 }
 
@@ -56,6 +77,11 @@ extension MainViewController {
   
   private func registerTableViewCell() {
     tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
+  }
+  
+  private func cleanUsers() {
+    self.users.removeAll()
+    tableView.reloadData()
   }
 }
 
@@ -74,16 +100,34 @@ extension MainViewController {
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return users.count
   }
-}
-
-// MARK: ScrollView Did Dragging Down
-extension MainViewController {
-  override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-    if scrollView.contentOffset.y > scrollView.contentSize.height / 1.3 {
-      print("Load new bach")
+  
+  // MARK: When scrol to Last Cell
+  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
+    if indexPath.row == users.count - 1 {
+      print("Last Cell")
+      guard let text = searchController.searchBar.text else {return}
+      
+      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.1)
+//
+//      viewModel.fetchUser(filteringText: text) { (result) in
+//        switch result {
+//        case .success(let users):
+//          print("ExtraUsers",users.count)
+//          self.users = users
+//        case .failure(let error):
+//          print("error")
+//          DispatchQueue.main.async {
+//            self.showAlert(message: error.localizedDescription)
+//          }
+////          self.showAlert(message: error.localizedDescription)
+//        }
+//      }
+      
     }
   }
 }
+
 
 //MARK: - Set SearchController
 extension MainViewController : UISearchResultsUpdating {
@@ -92,25 +136,16 @@ extension MainViewController : UISearchResultsUpdating {
     // Нужна проверка на дубликаты чтобы не дублировать запрос дважды
     guard
       let text          = searchController.searchBar.text,
-      text.isEmpty      == false,
-      currentSearchText != text
-    else {return}
-    currentSearchText = text
+      text.isEmpty      == false
+      
+      else {return cleanUsers()}
     
-    gitHubApi.fetchUsers(userName: text) { result in
-      
-      switch result {
-      case .success(let userSearchResult):
-//        userSearchResult.users
-        // Array(userSearchResult.users.prefix(10))
-        self.users = userSearchResult.users
-      case .failure(let error):
-        self.showAlert(title: "Что-то пошло не так", message: error.localizedDescription)
-      }
-      
-      
-    }
+    viewModel.dropPagging()
+    perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.3)
+
   }
+  
+ 
   
   
 }

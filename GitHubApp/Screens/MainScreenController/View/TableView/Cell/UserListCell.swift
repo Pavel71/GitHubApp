@@ -81,9 +81,12 @@ extension UserListCell{
 
 // MARK: Configure Cell
 extension UserListCell {
+  
   func configure(viewModel: UserListCellable) {
     nameLabel.text = viewModel.username
     typeLabel.text = viewModel.type
+    
+    self.avatarImageView.image = #imageLiteral(resourceName: "avatarPlaceholder")
     
     imageLoaderWithCache.loaderFor(user: viewModel).fetchImage(for: viewModel.avatarUrl) { [weak self] image in
       self?.avatarImageView.image = image
