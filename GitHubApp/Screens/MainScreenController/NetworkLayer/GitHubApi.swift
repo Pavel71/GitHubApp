@@ -90,7 +90,7 @@ enum Endpoint {
 
 // MARK: GitHubApi
 
-class GitHubApi {
+final class GitHubApi {
   
   static let shared = GitHubApi()
   

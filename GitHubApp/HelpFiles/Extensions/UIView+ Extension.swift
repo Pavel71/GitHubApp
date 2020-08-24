@@ -119,29 +119,7 @@ struct AnchoredConstraints {
 
 
 
-// MARK: Animate View
-extension UIView {
-  
-  func hideToTheRightCorner() {
-    self.transform = Constants.Animate.transformUpRightCorner
-    self.alpha = 0
-  }
-  
-  func hideToTheLeftCorner() {
-    self.transform = Constants.Animate.transformUpLeftCorner
-    self.alpha = 0
-  }
-  
-  func fadeTransition(_ duration:CFTimeInterval) {
-    let animation = CATransition()
-    animation.timingFunction = CAMediaTimingFunction(name:
-      CAMediaTimingFunctionName.easeInEaseOut)
-    animation.type = CATransitionType.fade
-    animation.duration = duration
-    layer.add(animation, forKey: CATransitionType.fade.rawValue)
-  }
-  
-}
+
 
 
 

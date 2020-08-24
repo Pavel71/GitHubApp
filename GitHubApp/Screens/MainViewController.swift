@@ -23,11 +23,20 @@ class MainViewController: UITableViewController {
   var currentSearchText = ""
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   
+  // MARK: DataSource
+  
+  var users : [GitHubUser] = [] {
+    didSet {
+      print("Reload data")
+      tableView.reloadData()
+    }
+  }
+  
   // MARK: - Lyfe Cycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    view.backgroundColor = .yellow
+  
+    configureTableView()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -35,6 +44,43 @@ class MainViewController: UITableViewController {
     searchController.searchResultsUpdater      = self
     navigationItem.searchController            = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
+  }
+  
+  
+}
+
+// MARK: - TableView Configure
+extension MainViewController {
+  
+  private func configureTableView() {
+    
+//    tableView.delegate   = self
+//    tableView.dataSource = self
+    
+    registerTableViewCell()
+  }
+  
+  private func registerTableViewCell() {
+    tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
+  }
+}
+
+// MARK: - TableView Delegate and DataSource
+
+extension MainViewController {
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: UserListCell.cellId, for: indexPath) as! UserListCell
+    
+    print(users[indexPath.row])
+    cell.configure(viewModel: users[indexPath.row])
+
+    return cell
+  }
+
+  
+  
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return users.count
   }
 }
 
@@ -54,7 +100,9 @@ extension MainViewController : UISearchResultsUpdating {
       
       switch result {
       case .success(let userSearchResult):
-        print(userSearchResult)
+        print(userSearchResult.users)
+        self.users = userSearchResult.users
+  
       case .failure(let error):
         self.showAlert(title: "Что-то пошло не так", message: error.localizedDescription)
       }
