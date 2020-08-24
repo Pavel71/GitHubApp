@@ -51,18 +51,26 @@ class MainViewController: UITableViewController {
     navigationItem.hidesSearchBarWhenScrolling = false
   }
   
+  
+  // MARK: - Fetch USers
+  
   @objc func fetchUsers(text: String) {
+    
+    self.tableView.tableFooterView = createFooterSpinner()
     
      viewModel.fetchUser(filteringText: text) {[weak self] result in
       
       self?.viewModel.isLoadingData = false
+      
+      DispatchQueue.main.async {
+        self?.tableView.tableFooterView = nil
+      }
       
         switch result {
         case .success(let users):
           self?.users = users
         case .failure(let error):
           print(error.localizedDescription)
-          
           DispatchQueue.main.async {
             self?.showAlert(message: error.localizedDescription)
           }
@@ -70,6 +78,14 @@ class MainViewController: UITableViewController {
         }
       }
    }
+  
+  // MARK: - Created Footer Spinner
+  
+  func createFooterSpinner() -> UIView {
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    activityIndicator.startAnimating()
+    return activityIndicator
+  }
   
   
 }
