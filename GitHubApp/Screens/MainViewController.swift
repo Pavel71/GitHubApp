@@ -16,7 +16,8 @@ class MainViewController: UITableViewController {
   let searchController : UISearchController = {
     let sc = UISearchController(searchResultsController:nil)
     sc.obscuresBackgroundDuringPresentation = false
-    sc.searchBar.placeholder = "Search for a GitHub user..."
+    sc.searchBar.placeholder                = "Search for a GitHub user..."
+    sc.definesPresentationContext           = true
     sc.searchBar.becomeFirstResponder()
     return sc
   }()
@@ -26,10 +27,7 @@ class MainViewController: UITableViewController {
   // MARK: DataSource
   
   var users : [GitHubUser] = [] {
-    didSet {
-      print("Reload data")
-      tableView.reloadData()
-    }
+    didSet {tableView.reloadData()}
   }
   
   // MARK: - Lyfe Cycle
@@ -53,10 +51,6 @@ class MainViewController: UITableViewController {
 extension MainViewController {
   
   private func configureTableView() {
-    
-//    tableView.delegate   = self
-//    tableView.dataSource = self
-    
     registerTableViewCell()
   }
   
@@ -70,8 +64,6 @@ extension MainViewController {
 extension MainViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: UserListCell.cellId, for: indexPath) as! UserListCell
-    
-    print(users[indexPath.row])
     cell.configure(viewModel: users[indexPath.row])
 
     return cell
@@ -81,6 +73,15 @@ extension MainViewController {
   
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return users.count
+  }
+}
+
+// MARK: ScrollView Did Dragging Down
+extension MainViewController {
+  override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    if scrollView.contentOffset.y > scrollView.contentSize.height / 1.3 {
+      print("Load new bach")
+    }
   }
 }
 
@@ -100,9 +101,9 @@ extension MainViewController : UISearchResultsUpdating {
       
       switch result {
       case .success(let userSearchResult):
-        print(userSearchResult.users)
+//        userSearchResult.users
+        // Array(userSearchResult.users.prefix(10))
         self.users = userSearchResult.users
-  
       case .failure(let error):
         self.showAlert(title: "Что-то пошло не так", message: error.localizedDescription)
       }

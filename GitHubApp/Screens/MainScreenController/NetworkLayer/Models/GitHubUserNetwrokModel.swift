@@ -18,17 +18,14 @@ struct UsersSearchResult: Decodable {
 }
 
 struct GitHubUser : Decodable,UserListCellable {
+
   
-  
-  
-  
-    let avatarUrl    : URL
+    var avatarUrl    : URL
     var username     : String
     let url          : URL
     let htmlUrl      : URL
     let reposUrl     : URL
     var type         : String
-    var avatarImage  : UIImage?
     var repositories : [Repository]?
     
     enum CodingKeys  : String, CodingKey {

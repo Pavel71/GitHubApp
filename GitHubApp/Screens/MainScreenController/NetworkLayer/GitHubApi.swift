@@ -107,7 +107,7 @@ final class GitHubApi {
     task.resume()
     
   }
-  
+  // MARK: - Fetch Users
   func fetchUsers(userName: String,
                   completion: @escaping (Result<UsersSearchResult,GitHubApiError>) -> Void
                   ) {

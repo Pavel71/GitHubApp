@@ -9,8 +9,10 @@
 import UIKit
 
 protocol UserListCellable {
-  var username : String {get set}
-  var type     : String {get set}
+  var username    : String   {get set}
+  var type        : String   {get set}
+  var avatarUrl   : URL      {get set}
+  
 }
 
 // Здесь нам нужно получить урл аватарки и загрузить его в эту конкретную ячейку!
@@ -35,10 +37,11 @@ class UserListCell: UITableViewCell {
   
   var avatarImageView: UIImageView = {
     let iv = UIImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
-    iv.clipsToBounds = true
     iv.contentMode = .scaleAspectFit
     return iv
   }()
+  
+  var imageLoaderWithCache : ImageLoaderCache! = ServiceLocator.shared.getService()
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -67,8 +70,11 @@ extension UserListCell{
     hStack.axis         = .horizontal
     hStack.spacing      = 5
     
+    avatarImageView.constrainWidth(constant: 50)
+    avatarImageView.constrainHeight(constant: 100)
+    
     addSubview(hStack)
-    hStack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+    hStack.fillSuperview(padding: .init(top: 10, left: 0, bottom: 10, right: 0))
     
   }
 }
@@ -78,5 +84,11 @@ extension UserListCell {
   func configure(viewModel: UserListCellable) {
     nameLabel.text = viewModel.username
     typeLabel.text = viewModel.type
+    
+    imageLoaderWithCache.loaderFor(user: viewModel).fetchImage(for: viewModel.avatarUrl) { [weak self] image in
+      self?.avatarImageView.image = image
+      self?.avatarImageView.roundCornersForAspectFit(radius: 15)
+    
+    }
   }
 }
