@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   private func root() {
     window = UIWindow(frame: UIScreen.main.bounds)
-    let navController = UINavigationController(rootViewController: ViewController())
+    let navController = UINavigationController(rootViewController: MainViewController())
     window?.rootViewController = navController
     window?.makeKeyAndVisible()
   }

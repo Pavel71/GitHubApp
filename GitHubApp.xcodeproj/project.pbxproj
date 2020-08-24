@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547A95824F3E1C400393BB4 /* MainViewController.swift */; };
 		0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869324F3CEE200CA14CF /* AppDelegate.swift */; };
 		0578869824F3CEE200CA14CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869724F3CEE200CA14CF /* ViewController.swift */; };
 		0578869D24F3CEE700CA14CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0578869C24F3CEE700CA14CF /* Assets.xcassets */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0547A95824F3E1C400393BB4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
 		0578869024F3CEE200CA14CF /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0578869324F3CEE200CA14CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0578869724F3CEE200CA14CF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -37,6 +39,46 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0547A95A24F3E1CB00393BB4 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				0547A95B24F3E1EF00393BB4 /* MainScreenController */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		0547A95B24F3E1EF00393BB4 /* MainScreenController */ = {
+			isa = PBXGroup;
+			children = (
+				0547A95E24F3E20700393BB4 /* Model */,
+				0547A95D24F3E1FF00393BB4 /* View */,
+				0547A95C24F3E1FA00393BB4 /* Controller */,
+			);
+			path = MainScreenController;
+			sourceTree = "<group>";
+		};
+		0547A95C24F3E1FA00393BB4 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0547A95824F3E1C400393BB4 /* MainViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		0547A95D24F3E1FF00393BB4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0547A95E24F3E20700393BB4 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		0578868724F3CEE200CA14CF = {
 			isa = PBXGroup;
 			children = (
@@ -59,8 +101,8 @@
 				057886A824F3CF7300CA14CF /* README.md */,
 				057886AA24F3CFA800CA14CF /* Tasks.txt */,
 				057886A724F3CEF800CA14CF /* SupportFiles */,
+				0547A95A24F3E1CB00393BB4 /* Screens */,
 				0578869724F3CEE200CA14CF /* ViewController.swift */,
-				0578869C24F3CEE700CA14CF /* Assets.xcassets */,
 			);
 			path = GitHubApp;
 			sourceTree = "<group>";
@@ -68,6 +110,7 @@
 		057886A724F3CEF800CA14CF /* SupportFiles */ = {
 			isa = PBXGroup;
 			children = (
+				0578869C24F3CEE700CA14CF /* Assets.xcassets */,
 				0578869324F3CEE200CA14CF /* AppDelegate.swift */,
 				0578869E24F3CEE700CA14CF /* LaunchScreen.storyboard */,
 				057886A124F3CEE700CA14CF /* Info.plist */,
@@ -147,6 +190,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */,
 			);
