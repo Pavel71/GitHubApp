@@ -38,6 +38,7 @@ class UserListCell: UITableViewCell {
   var avatarImageView: AsyncLoadedImageView = {
     let iv = AsyncLoadedImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
     iv.contentMode = .scaleAspectFit
+    
     return iv
   }()
   
@@ -65,16 +66,22 @@ extension UserListCell{
     vStack.axis         = .vertical
     vStack.spacing      = 5
     
-    let hStack = UIStackView(arrangedSubviews: [avatarImageView,vStack])
-    hStack.distribution = .fillEqually
-    hStack.axis         = .horizontal
-    hStack.spacing      = 5
     
-    avatarImageView.constrainWidth(constant: 50)
-    avatarImageView.constrainHeight(constant: 100)
+    let avatarContanerView = UIView()
+    
+    avatarContanerView.addSubview(avatarImageView)
+    avatarImageView.fillSuperview()
+    
+    let hStack = UIStackView(arrangedSubviews: [avatarContanerView,vStack])
+    hStack.distribution = .fill
+    hStack.axis         = .horizontal
+    hStack.spacing      = 20
+    
+    avatarContanerView.constrainWidth(constant: 100)
+    
     
     addSubview(hStack)
-    hStack.fillSuperview(padding: .init(top: 10, left: 0, bottom: 10, right: 0))
+    hStack.fillSuperview(padding: .init(top: 10, left: 16, bottom: 10, right: 16))
     
   }
 }
@@ -86,9 +93,9 @@ extension UserListCell {
     nameLabel.text = viewModel.username
     typeLabel.text = viewModel.type
     
-    self.avatarImageView.image = #imageLiteral(resourceName: "avatarPlaceholder")
-    
     self.avatarImageView.loadImageUsingUrl(url: viewModel.avatarUrl)
+ 
     self.avatarImageView.roundCornersForAspectFit(radius: 15)
+    layoutSubviews()
   }
 }

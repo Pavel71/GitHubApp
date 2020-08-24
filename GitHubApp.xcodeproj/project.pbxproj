@@ -25,6 +25,7 @@
 		058A759D24F41AF40053D361 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759C24F41AF40053D361 /* UIImageView+Extension.swift */; };
 		058A75A024F425C60053D361 /* MainScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759F24F425C60053D361 /* MainScreenViewModel.swift */; };
 		058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */; };
+		058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75A424F4627D0053D361 /* UIImage+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		058A759C24F41AF40053D361 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		058A759F24F425C60053D361 /* MainScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewModel.swift; sourceTree = "<group>"; };
 		058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoadedImageView.swift; sourceTree = "<group>"; };
+		058A75A424F4627D0053D361 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 				058A759124F3FA060053D361 /* UIView+ Extension.swift */,
 				058A758F24F3FA010053D361 /* UIViewController+Extension.swift */,
 				058A759C24F41AF40053D361 /* UIImageView+Extension.swift */,
+				058A75A424F4627D0053D361 /* UIImage+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				058A759824F3FCC80053D361 /* UserListCell.swift in Sources */,
 				058A759024F3FA010053D361 /* UIViewController+Extension.swift in Sources */,
 				0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */,
+				058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,
 				0513C39024F3ED9A00991B55 /* Repository.swift in Sources */,

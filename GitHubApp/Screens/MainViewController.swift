@@ -30,7 +30,10 @@ class MainViewController: UITableViewController {
   
   var users : [GitHubUser] = [] {
     didSet {
-      self.tableView.reloadData()
+      DispatchQueue.main.async {
+        self.tableView.reloadData()
+      }
+      
     }
   }
   
@@ -49,16 +52,19 @@ class MainViewController: UITableViewController {
   }
   
   @objc func fetchUsers(text: String) {
-     viewModel.fetchUser(filteringText: text) { result in
-        
+    
+     viewModel.fetchUser(filteringText: text) {[weak self] result in
+      
+      self?.viewModel.isLoadingData = false
+      
         switch result {
         case .success(let users):
-          self.users = users
+          self?.users = users
         case .failure(let error):
           print(error.localizedDescription)
           
           DispatchQueue.main.async {
-            self.showAlert(message: error.localizedDescription)
+            self?.showAlert(message: error.localizedDescription)
           }
           
         }
@@ -101,15 +107,33 @@ extension MainViewController {
     return users.count
   }
   
-  // MARK: When scrol to Last Cell
-  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+  
+  
+}
+// MARK: When scrol to Last Cell
+extension MainViewController {
+  
+//  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//
+//    if indexPath.row == users.count - 5 && indexPath.row > 5 {
+//      print("Last Cell")
+//      guard let text = searchController.searchBar.text else {return}
+//
+//      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.1)
+//
+//    }
+//  }
+  
+  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    let position       = scrollView.contentOffset.y
+    let scrollViewLastCell = (tableView.contentSize.height - 100) - scrollView.frame.size.height
     
-    if indexPath.row == users.count - 5 && indexPath.row > 5 {
+    guard let text = searchController.searchBar.text else {return}
+    if position > scrollViewLastCell && viewModel.isLoadingData == false && text.isEmpty == false {
+      viewModel.isLoadingData = true
+      print("Fetch New Data")
       
-      guard let text = searchController.searchBar.text else {return}
-      
-      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.1)
-      
+      fetchUsers(text: text)
     }
   }
 }

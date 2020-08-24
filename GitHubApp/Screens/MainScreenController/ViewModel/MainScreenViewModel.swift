@@ -25,25 +25,14 @@ final class MainScreenViewModel {
   
   
   func fetchUser(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
-    
-    
-    
-    incrementPagging()
-    isLoadingData = true
-    
 
-    
-    
+    incrementPagging()
     
     gitHubApi.fetchUsers(userName: filteringText, pages: pagging) { result in
           
           switch result {
           case .success(let userSearchResult):
-            
-            self.isLoadingData = false
             complatition(.success(userSearchResult.users))
-            
-            
           case .failure(let error):
             complatition(.failure(error))
             

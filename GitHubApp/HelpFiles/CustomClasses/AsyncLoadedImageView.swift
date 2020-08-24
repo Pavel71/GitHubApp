@@ -17,9 +17,8 @@ class AsyncLoadedImageView: UIImageView {
     
     func loadImageUsingUrl(url: URL) {
         
-        imageUrl = url
-        
-        image = #imageLiteral(resourceName: "avatarPlaceholder")
+      imageUrl = url
+      image = #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true)
         
       if let imageFromCache = imageCache.object(forKey: url.absoluteString as NSString) {
             self.image = imageFromCache
@@ -34,10 +33,11 @@ class AsyncLoadedImageView: UIImageView {
             }
             
             DispatchQueue.main.async {
-                guard let imageToCache = UIImage(data: data!) else { return }
-                
+              guard let imageToCache = UIImage(data: data!)?.resizeImage(100, opaque: true) else { return }
+              
                 if self.imageUrl == url {
-                    self.image = imageToCache
+                  self.image = imageToCache
+                 
                 }
                 
               imageCache.setObject(imageToCache, forKey: url.absoluteString as NSString)
