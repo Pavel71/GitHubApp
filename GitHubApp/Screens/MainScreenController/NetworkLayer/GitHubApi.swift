@@ -120,13 +120,13 @@ final class GitHubApi {
       // Error
       if let error = error {
         completion(.failure(.apiError(error)))
-        return
+        
       }
       // HTTP Response
       if let httpResponse  = response as? HTTPURLResponse,
         httpResponse.statusCode != 200 {
         completion(.failure(.responseError(httpResponse.statusCode)))
-        return
+        
       }
       // Data
       if let data  = data {
@@ -134,10 +134,13 @@ final class GitHubApi {
         let results: UsersSearchResult? = self.convertNetworkDataToModel(data: data, type: UsersSearchResult.self)
         
         if let res = results  {
-          completion(.success(res))
+          DispatchQueue.main.async {
+              completion(.success(res))
+          }
+          
         } else {
           completion(.failure(.decodingError))
-          return
+          
         }
       
       }

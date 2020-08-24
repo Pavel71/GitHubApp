@@ -104,25 +104,11 @@ extension MainViewController {
   // MARK: When scrol to Last Cell
   override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     
-    if indexPath.row == users.count - 1 {
-      print("Last Cell")
+    if indexPath.row == users.count - 5 && indexPath.row > 5 {
+      
       guard let text = searchController.searchBar.text else {return}
       
       perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.1)
-//
-//      viewModel.fetchUser(filteringText: text) { (result) in
-//        switch result {
-//        case .success(let users):
-//          print("ExtraUsers",users.count)
-//          self.users = users
-//        case .failure(let error):
-//          print("error")
-//          DispatchQueue.main.async {
-//            self.showAlert(message: error.localizedDescription)
-//          }
-////          self.showAlert(message: error.localizedDescription)
-//        }
-//      }
       
     }
   }

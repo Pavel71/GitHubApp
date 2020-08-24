@@ -22,9 +22,9 @@
 		058A759224F3FA060053D361 /* UIView+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759124F3FA060053D361 /* UIView+ Extension.swift */; };
 		058A759424F3FBC00053D361 /* MainScreenTasks in Resources */ = {isa = PBXBuildFile; fileRef = 058A759324F3FBBF0053D361 /* MainScreenTasks */; };
 		058A759824F3FCC80053D361 /* UserListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759724F3FCC80053D361 /* UserListCell.swift */; };
-		058A759B24F413AE0053D361 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759A24F413AE0053D361 /* ImageLoader.swift */; };
 		058A759D24F41AF40053D361 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759C24F41AF40053D361 /* UIImageView+Extension.swift */; };
 		058A75A024F425C60053D361 /* MainScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759F24F425C60053D361 /* MainScreenViewModel.swift */; };
+		058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,9 +45,9 @@
 		058A759124F3FA060053D361 /* UIView+ Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+ Extension.swift"; sourceTree = "<group>"; };
 		058A759324F3FBBF0053D361 /* MainScreenTasks */ = {isa = PBXFileReference; lastKnownFileType = text; path = MainScreenTasks; sourceTree = "<group>"; };
 		058A759724F3FCC80053D361 /* UserListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListCell.swift; sourceTree = "<group>"; };
-		058A759A24F413AE0053D361 /* ImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		058A759C24F41AF40053D361 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		058A759F24F425C60053D361 /* MainScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewModel.swift; sourceTree = "<group>"; };
+		058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoadedImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +166,7 @@
 		058A758A24F3F8C30053D361 /* HelpFiles */ = {
 			isa = PBXGroup;
 			children = (
-				058A759924F4139E0053D361 /* ImageLoader */,
+				058A75A124F456DF0053D361 /* CustomClasses */,
 				058A758C24F3F8D70053D361 /* ServiceLocator */,
 				058A758B24F3F8CD0053D361 /* Extensions */,
 			);
@@ -207,20 +207,20 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		058A759924F4139E0053D361 /* ImageLoader */ = {
-			isa = PBXGroup;
-			children = (
-				058A759A24F413AE0053D361 /* ImageLoader.swift */,
-			);
-			path = ImageLoader;
-			sourceTree = "<group>";
-		};
 		058A759E24F425AF0053D361 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
 				058A759F24F425C60053D361 /* MainScreenViewModel.swift */,
 			);
 			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		058A75A124F456DF0053D361 /* CustomClasses */ = {
+			isa = PBXGroup;
+			children = (
+				058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */,
+			);
+			path = CustomClasses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,8 +300,8 @@
 				058A759024F3FA010053D361 /* UIViewController+Extension.swift in Sources */,
 				0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
+				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,
 				0513C39024F3ED9A00991B55 /* Repository.swift in Sources */,
-				058A759B24F413AE0053D361 /* ImageLoader.swift in Sources */,
 				058A759D24F41AF40053D361 /* UIImageView+Extension.swift in Sources */,
 				058A75A024F425C60053D361 /* MainScreenViewModel.swift in Sources */,
 				0513C38C24F3E5B000991B55 /* GitHubApi.swift in Sources */,

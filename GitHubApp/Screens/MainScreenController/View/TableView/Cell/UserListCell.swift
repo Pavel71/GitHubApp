@@ -35,13 +35,13 @@ class UserListCell: UITableViewCell {
     return l
   }()
   
-  var avatarImageView: UIImageView = {
-    let iv = UIImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
+  var avatarImageView: AsyncLoadedImageView = {
+    let iv = AsyncLoadedImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
     iv.contentMode = .scaleAspectFit
     return iv
   }()
   
-  var imageLoaderWithCache : ImageLoaderCache! = ServiceLocator.shared.getService()
+ 
   
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -88,10 +88,7 @@ extension UserListCell {
     
     self.avatarImageView.image = #imageLiteral(resourceName: "avatarPlaceholder")
     
-    imageLoaderWithCache.loaderFor(user: viewModel).fetchImage(for: viewModel.avatarUrl) { [weak self] image in
-      self?.avatarImageView.image = image
-      self?.avatarImageView.roundCornersForAspectFit(radius: 15)
-    
-    }
+    self.avatarImageView.loadImageUsingUrl(url: viewModel.avatarUrl)
+    self.avatarImageView.roundCornersForAspectFit(radius: 15)
   }
 }
