@@ -15,7 +15,7 @@ class AsyncLoadedImageView: UIImageView {
     
     var imageUrl: URL?
     
-    func loadImageUsingUrl(url: URL) {
+  func loadImageUsingUrl(url: URL,completion: @escaping (Bool) -> Void) {
         
       imageUrl = url
       image = #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true)
@@ -37,7 +37,7 @@ class AsyncLoadedImageView: UIImageView {
               
                 if self.imageUrl == url {
                   self.image = imageToCache
-                 
+                  completion(true)
                 }
                 
               imageCache.setObject(imageToCache, forKey: url.absoluteString as NSString)

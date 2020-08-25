@@ -94,9 +94,9 @@ extension UserListCell {
     nameLabel.text = viewModel.username
     typeLabel.text = viewModel.type
     
-    self.avatarImageView.loadImageUsingUrl(url: viewModel.avatarUrl)
- 
-    self.avatarImageView.roundCornersForAspectFit(radius: 15)
-    layoutSubviews()
+    self.avatarImageView.loadImageUsingUrl(url: viewModel.avatarUrl) { [weak self] isLoaded in
+      self?.avatarImageView.roundCornersForAspectFit(radius: 15)
+    }
+    
   }
 }
