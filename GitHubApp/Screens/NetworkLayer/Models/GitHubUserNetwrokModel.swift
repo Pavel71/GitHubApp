@@ -10,10 +10,12 @@ import UIKit
 
 
 struct UsersSearchResult: Decodable {
-    let users: [GitHubUser]
+    let totalCount : Int
+    let users      : [GitHubUser]
     
     enum CodingKeys: String, CodingKey {
         case users = "items"
+        case totalCount 
     }
 }
 

@@ -18,8 +18,13 @@ final class MainScreenViewModel {
   
   
   // MainScreenPropertys
-  var users   : [GitHubUser] = []
-  var pagging : Int          = 0
+  var users   : [GitHubUser] = [] {
+    didSet {wasUsersCount = users.count}
+  }
+  var wasUsersCount : Int    = 0
+  var pagging       : Int    = 0
+  var totalCount    : Int    = 0
+  
   var isLoadingData          = false
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var currentUserString      = ""
@@ -34,21 +39,29 @@ final class MainScreenViewModel {
   
   func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
 
-    incrementPagging()
     
-    gitHubApi.searchUsers(userName: filteringText, pages: pagging) { result in
+    if (pagging < totalCount && pagging < 100) || pagging == 0 {
+      
+      incrementPagging()
+      gitHubApi.searchUsers(userName: filteringText, pages: pagging) { result in
+        
+        switch result {
+        case .success(let userSearchResult):
+          self.users      = userSearchResult.users
+          self.totalCount = userSearchResult.totalCount
           
-          switch result {
-          case .success(let userSearchResult):
-            self.users = userSearchResult.users
-            complatition(.success(userSearchResult.users))
-          case .failure(let error):
-            complatition(.failure(error))
-            
-          }
-          
-          
+          complatition(.success(userSearchResult.users))
+        case .failure(let error):
+          complatition(.failure(error))
         }
+        
+        
+      }
+    } else {
+      complatition(.failure(.paggingError))
+    }
+    
+    
   }
 
   // MARK: - Pagging
@@ -57,6 +70,12 @@ final class MainScreenViewModel {
   }
   func incrementPagging() {
     pagging += 15
+  }
+  
+  func resetRequestProperty() {
+    dropPagging()
+    totalCount        = 0
+    currentUserString = ""
   }
   
 }

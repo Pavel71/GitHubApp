@@ -60,7 +60,7 @@ class MainViewController: UITableViewController {
   // MARK: - Fetch USers
   
   @objc func fetchUsers() {
-    
+    print("Fetch Users")
    
     let text = viewModel.currentUserString
     
@@ -73,7 +73,7 @@ class MainViewController: UITableViewController {
       self?.viewModel.isLoadingData = false
       
       DispatchQueue.main.async {
-        self?.tableView.tableFooterView = nil
+        self?.dismissFooterIndicator()
       }
       
         switch result {
@@ -83,6 +83,7 @@ class MainViewController: UITableViewController {
           print(error.localizedDescription)
           DispatchQueue.main.async {
             self?.showAlert(message: error.localizedDescription)
+            self?.dismissFooterIndicator()
           }
           
         }
@@ -106,7 +107,8 @@ extension MainViewController {
   }
   
   private func cleanUsers() {
-    viewModel.currentUserString = ""
+   
+    viewModel.resetRequestProperty()
     self.users.removeAll()
     tableView.reloadData()
   }
@@ -183,16 +185,20 @@ extension MainViewController {
     activityIndicator.startAnimating()
     return activityIndicator
   }
+  
+  func dismissFooterIndicator() {
+    tableView.tableFooterView = nil
+  }
 }
-// MARK: When scrol to Last Cell
+// MARK: Scroll to Last Cell
 extension MainViewController {
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let position       = scrollView.contentOffset.y
-    let scrollViewLastCell = (tableView.contentSize.height - 100) - scrollView.frame.size.height
+    let scrollViewLastCell = (tableView.contentSize.height + 30) - scrollView.frame.size.height
     
     guard let text = searchController.searchBar.text else {return}
-    
+
     if position > scrollViewLastCell && viewModel.isLoadingData == false && text.isEmpty == false {
       viewModel.isLoadingData     = true
       viewModel.currentUserString = text
@@ -216,13 +222,14 @@ extension MainViewController :  UISearchBarDelegate{
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
     viewModel.currentUserString = searchText
+    viewModel.dropPagging()
     
     if searchText.isEmpty {
       
       cleanUsers()
       
     } else {
-      viewModel.dropPagging()
+      
       
       NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.fetchUsers), object: searchBar)
       perform(#selector(self.fetchUsers), with: searchBar, afterDelay: 0.75)

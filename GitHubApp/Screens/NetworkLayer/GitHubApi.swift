@@ -19,6 +19,7 @@ enum GitHubApiError: Error, LocalizedError, Identifiable {
     case genericError
     case apiError(Error)
     case userDetailsError
+    case paggingError
     
     var localizedDescription: String {
         switch self {
@@ -36,7 +37,10 @@ enum GitHubApiError: Error, LocalizedError, Identifiable {
             return "An unknown error has been occured"
         case .userDetailsError:
           return "Ошибка при загрузке данных по пользователю"
+        case .paggingError:
+          return "Больше пользователей не загрузить"
         }
+      
     }
 }
 
