@@ -16,6 +16,7 @@ class DetailsViewController : UITableViewController {
   
   var detailViewModel  : DetailScreenViewModel
   
+  let headerHeigth: CGFloat = 200
   // Header
   var detailModel : DetailModel
   // List
@@ -49,7 +50,18 @@ class DetailsViewController : UITableViewController {
   }
   
   func configureTableView() {
+    
+    
     tableView.register(RepoListCell.self, forCellReuseIdentifier: RepoListCell.cellId)
+    
+    setDetailHeader()
+  }
+  
+  func setDetailHeader() {
+    
+    let header = DetailHeaderView(frame: .init(x: 0, y: 0, width: 0, height: 200))
+    header.configure(viewModel: detailModel)
+    tableView.tableHeaderView = header
   }
   
 }
@@ -68,7 +80,17 @@ extension DetailsViewController {
   }
 }
 
-// MARK: TableView Header 
+// MARK: TableView Header
 extension DetailsViewController {
+  
+//  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//    let header = DetailHeaderView(frame: .zero)
+//    header.configure(viewModel: detailModel)
+//    return header
+//  }
+//
+//  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//    return headerHeigth
+//  }
   
 }

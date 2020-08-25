@@ -22,7 +22,8 @@ class AsyncLoadedImageView: UIImageView {
         
       if let imageFromCache = imageCache.object(forKey: url.absoluteString as NSString) {
             self.image = imageFromCache
-            return
+            completion(true)
+            
         }
         
         URLSession.shared.dataTask(with: url, completionHandler: { (data, respones, error) in

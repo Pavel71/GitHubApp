@@ -15,7 +15,7 @@ struct DetailScreenModel {
 }
 
 
-struct DetailModel: Decodable {
+struct DetailModel: Decodable,DetailHeaderViewable {
   
   var login       : String
   
