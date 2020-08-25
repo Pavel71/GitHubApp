@@ -17,12 +17,20 @@ import Foundation
 final class MainScreenViewModel {
   
   
+  // MainScreenPropertys
+  var users   : [GitHubUser] = []
   var pagging : Int          = 0
   var isLoadingData          = false
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var currentUserString      = ""
+  
+  // DetailScreenViewModel
+  
+  var detailScreenViewModel : DetailScreenViewModel!
+  
 
   
+  // MARK: - Search Users
   
   func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
 
@@ -32,6 +40,7 @@ final class MainScreenViewModel {
           
           switch result {
           case .success(let userSearchResult):
+            self.users = userSearchResult.users
             complatition(.success(userSearchResult.users))
           case .failure(let error):
             complatition(.failure(error))
@@ -42,7 +51,7 @@ final class MainScreenViewModel {
         }
   }
 
-  
+  // MARK: - Pagging
   func dropPagging() {
     pagging = 0
   }
@@ -50,4 +59,28 @@ final class MainScreenViewModel {
     pagging += 15
   }
   
+}
+
+// MARK: - Routing
+extension MainScreenViewModel {
+  
+  
+  func routToDetailScreenController(indexPath: IndexPath,completion: @escaping (Result<Bool,GitHubApiError>) -> Void) {
+    let user = users[indexPath.row]
+       
+    detailScreenViewModel = DetailScreenViewModel(userName: user.username)
+       
+       detailScreenViewModel.fetchDetailScreenData {(result) in
+        
+         switch result {
+         case .failure(let error):
+          completion(.failure(error))
+          
+         case .success(let isSucces):
+           completion(.success(isSucces))
+
+         }
+         
+       }
+  }
 }

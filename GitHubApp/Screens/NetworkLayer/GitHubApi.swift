@@ -67,6 +67,7 @@ enum Endpoint {
   
   case userSearch(searchFilter: String,pages: Int)
   case user(userName: String)
+  case repos(userName: String)
   
   var baseURL : URL {URL(string: "https://api.github.com")!}
   
@@ -74,11 +75,13 @@ enum Endpoint {
     switch self {
     case .userSearch : return "/search/users"
     case .user       : return "/users"
+    case .repos      : return "/users"
     }
   }
   
   var absoluteURL: URL? {
-      let queryURL = baseURL.appendingPathComponent(self.path())
+    
+      var queryURL = baseURL.appendingPathComponent(self.path())
       let components = URLComponents(url: queryURL, resolvingAgainstBaseURL: true)
       guard var urlComponents = components else {
           return nil
@@ -89,12 +92,18 @@ enum Endpoint {
           URLQueryItem(name: "q", value: searchFilter.lowercased()),
           URLQueryItem(name: "per_page", value: "\(pages)")
         ]
+        return urlComponents.url
+        
       case .user(let username):
-         urlComponents.queryItems = [
-                 URLQueryItem(name: ":", value: username),
-               ]
+        
+        return URL(string: "https://api.github.com/users/\(username)")
+        
+        
+      case .repos(let userName):
+        return URL(string: "https://api.github.com/users/\(userName)/repos")
+      
     }
-      return urlComponents.url
+      
   }
 }
 
@@ -149,40 +158,90 @@ final class GitHubApi {
   }
   
       // MARK: - Fetch User
-  func fetchUserByUrl(url: URL,
+  func fetchUser(userName: String,
                       completion: @escaping (Result<DetailModel,GitHubApiError>) -> Void) {
+    
+    let endpoint:Endpoint = .user(userName: userName)
+     
+    fetch(endPoint: endpoint) { data,response, error in
+      // Error
+      if let error = error {
+        completion(.failure(.apiError(error)))
+        
+      }
+      // HTTP Response
+      if let httpResponse  = response as? HTTPURLResponse,
+        httpResponse.statusCode != 200 {
+        completion(.failure(.responseError(httpResponse.statusCode)))
+        
+      }
+      // Data
+      if let data  = data {
+        
+        let results  = self.convertNetworkDataToModel(data: data, type: DetailModel.self)
 
-    do {
-      let data = try Data(contentsOf:url)
+        if let res = results  {
+          DispatchQueue.main.async {
+              completion(.success(res))
+          }
+        } else {
+          completion(.failure(.decodingError))
+          
+        }
       
-//      let json = try JSONSerialization.jsonObject(with: data, options: [])
-//      print(json)
-      let model = try APIConstants.jsonDecoder.decode(DetailModel.self, from: data)
-      completion(.success(model))
-//      print(model)
-    }catch {
-      print("Get user Url data Error")
-      completion(.failure(.userDetailsError))
+      }
+       
     }
+
 
   }
   
       // MARK: - Fetch Repos
-  func fetchReposByUrl(url: URL,
+  func fetchRepos(userName: String,
                       completion: @escaping (Result<[Repository],GitHubApiError>) -> Void) {
+    
+    let endPoitn: Endpoint = .repos(userName: userName)
+    
+    fetch(endPoint: endPoitn) { data,response, error in
+      // Error
+      if let error = error {
+        completion(.failure(.apiError(error)))
+        
+      }
+      // HTTP Response
+      if let httpResponse  = response as? HTTPURLResponse,
+        httpResponse.statusCode != 200 {
+        completion(.failure(.responseError(httpResponse.statusCode)))
+        
+      }
+      // Data
+      if let data  = data {
+        
+        let results  = self.convertNetworkDataToModel(data: data, type: [Repository].self)
 
-    do {
-      let data = try Data(contentsOf:url)
+        if let res = results  {
+          DispatchQueue.main.async {
+              completion(.success(res))
+          }
+        } else {
+          completion(.failure(.decodingError))
+          
+        }
       
-//      let json = try JSONSerialization.jsonObject(with: data, options: [])
-//      print(json)
-      let model = try APIConstants.jsonDecoder.decode([Repository].self, from: data)
-      completion(.success(model))
-//      print(model)
-    }catch {
-      print("Get user Url data Error")
-      completion(.failure(.userDetailsError))
+      }
+       
     }
+    
+//    do {
+//      let data = try Data(contentsOf:url)
+//      
+//      let model = try APIConstants.jsonDecoder.decode([Repository].self, from: data)
+//
+//      completion(.success(model))
+//
+//    } catch {
+//      completion(.failure(.userDetailsError))
+//    }
 
   }
 

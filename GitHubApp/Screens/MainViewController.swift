@@ -23,6 +23,8 @@ class MainViewController: UITableViewController {
     return sc
   }()
   
+  let loadingActivityIndicator = LoadingActivityIndicator(frame: .init(x: 0, y: 0, width: 100, height: 100))
+  
   // MARK: ViewModel
   
   var viewModel = MainScreenViewModel()
@@ -43,6 +45,7 @@ class MainViewController: UITableViewController {
     super.viewDidLoad()
   
     configureTableView()
+    setLoadingActivitIndicator()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -86,13 +89,7 @@ class MainViewController: UITableViewController {
       }
    }
   
-  // MARK: - Created Footer Spinner
-  
-  func createFooterSpinner() -> UIView {
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
-    activityIndicator.startAnimating()
-    return activityIndicator
-  }
+
   
   
 }
@@ -137,19 +134,54 @@ extension MainViewController {
 // MARK: - Navigation
 extension MainViewController {
   
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let user = users[indexPath.row]
-    print("Fetch user data",user.username)
-    
-    let detailScreenViewModel = DetailScreenViewModel(
-      userUrl: user.url, reposUrl: user.reposUrl)
-    
-    detailScreenViewModel.fetchDetailScreenData { (result) in
-      
-    }
-    
 
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
+    showLoadingActivitIndicator()
+    viewModel.routToDetailScreenController(indexPath: indexPath) {[weak self] result in
+      
+      switch result {
+      case .failure(let error):
+        self?.showAlert(message: error.localizedDescription)
+      case .success(_):
+        
+        let detailViewController = DetailsViewController(detailViewModel: (self?.viewModel.detailScreenViewModel)!)
+        self?.navigationController?.pushViewController(detailViewController, animated: true)
+      }
+
+       self?.dismisLoadingActivtiIndiactor()
+    }
+  }
+}
+
+// MARK: -  Activity Indicators
+extension MainViewController {
+  func setLoadingActivitIndicator() {
+    view.addSubview(loadingActivityIndicator)
+    loadingActivityIndicator.center   = view.center
+    loadingActivityIndicator.isHidden = true
+  }
+  
+  func showLoadingActivitIndicator() {
+    loadingActivityIndicator.activityIndicator.startAnimating()
+    loadingActivityIndicator.isHidden = false
+  }
+  func dismisLoadingActivtiIndiactor() {
+   
+      self.loadingActivityIndicator.activityIndicator.stopAnimating()
+      self.loadingActivityIndicator.isHidden = true
+    
+    
+    
+  }
+  
+  // MARK: - Created Footer Spinner
+  
+  func createFooterSpinner() -> UIView {
+    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    activityIndicator.startAnimating()
+    return activityIndicator
   }
 }
 // MARK: When scrol to Last Cell

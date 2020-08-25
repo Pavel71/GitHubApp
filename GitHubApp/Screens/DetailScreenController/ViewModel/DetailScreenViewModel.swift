@@ -11,48 +11,87 @@ import Foundation
 
 final class DetailScreenViewModel {
   
-  var detailScreenModel : DetailScreenModel?
+  var detailScreenModel : DetailScreenModel!
   
-  var userUrl   : URL
-  var reposUrl  : URL
+  var detailModel       : DetailModel?
+  var repos             : [Repository]?
+  var error             : GitHubApiError?
+  
+//  var userUrl   : URL
+//  var reposUrl  : URL
+  var userName  : String
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var dispatchGroup = DispatchGroup()
   
-  init(userUrl: URL,reposUrl: URL) {
-    self.userUrl  = userUrl
-    self.reposUrl = reposUrl
+  init(userName: String) {
+    self.userName = userName
+//    self.userUrl  = userUrl
+//    self.reposUrl = reposUrl
   }
   
   // MARK: - Fetch Detail Screen Model
-  func fetchDetailScreenData(complatition: @escaping (Result<DetailScreenModel,GitHubApiError>) -> Void) {
-  
-    dispatchGroup.enter()
-    print("Загрузка User")
-    fetchUser { (result) in
-      self.dispatchGroup.leave()
-      print("загрузка User Completed")
-    }
-    print("Ждем??")
-    dispatchGroup.enter()
-    print("Загрузка Repos")
-    fetchRepos{ (result) in
-      self.dispatchGroup.leave()
-      print("загрузка Repos Completed")
-    }
+  func fetchDetailScreenData(complatition: @escaping (Result<Bool,GitHubApiError>) -> Void) {
     
+
+    dispatchGroup.enter()
+
+    DispatchQueue.global().async {
+      self.fetchUser { (result) in
+        self.dispatchGroup.leave()
+
+        switch result {
+        case .success(let detailModel):
+//          print(detailModel)
+          self.detailModel = detailModel
+        case .failure(let error):
+          self.error = error
+        }
+
+      }
+    }
+// Loading Repos
+    dispatchGroup.enter()
+
+    DispatchQueue.global().async {
+      self.fetchRepos{ (result) in
+        self.dispatchGroup.leave()
+        switch result {
+        case .success(let repos):
+//          print(repos)
+          self.repos = repos
+        case .failure(let error):
+          self.error = error
+        }
+      }
+    }
+//
     dispatchGroup.notify(queue: .main) {
-      print("Загрузка всех данных закончилась")
+      print("Загрузка всех данных Загрузились")
+      DispatchQueue.main.async {
+        if let error = self.error {
+          
+          complatition(.failure(error))
+          
+        } else {
+          
+          let detailScreenModel = DetailScreenModel(details: self.detailModel!, repos: self.repos)
+          self.detailScreenModel = detailScreenModel
+          complatition(.success(true))
+          
+        }
+      }
+
     }
   }
   
   // MARK: - Fetch User
   private func fetchUser(complatition: @escaping (Result<DetailModel,GitHubApiError>) -> Void) {
-    
-    gitHubApi.fetchUserByUrl(url: userUrl, completion: complatition)
+    gitHubApi.fetchUser(userName: userName, completion: complatition)
+//    gitHubApi.fetchUserByUrl(userName: userUrl, completion: complatition)
   }
   // MARK: - Fetch Repos
   private func fetchRepos(complatition: @escaping (Result<[Repository],GitHubApiError>) -> Void) {
-    
-    gitHubApi.fetchReposByUrl(url: reposUrl, completion: complatition)
+    gitHubApi.fetchRepos(userName: userName, completion: complatition)
+//    gitHubApi.fetchReposByUrl(url: reposUrl, completion: complatition)
   }
 }
