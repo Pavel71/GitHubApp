@@ -12,6 +12,8 @@
 		0513C39024F3ED9A00991B55 /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0513C38F24F3ED9A00991B55 /* Repository.swift */; };
 		051BC73124F51E970066B100 /* DispatchQue+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73024F51E970066B100 /* DispatchQue+Extension.swift */; };
 		051BC73324F534FD0066B100 /* LoadingActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73224F534FD0066B100 /* LoadingActivityIndicator.swift */; };
+		051BC73724F551690066B100 /* RepoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73624F551690066B100 /* RepoListCell.swift */; };
+		051BC73A24F553520066B100 /* DetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73924F553520066B100 /* DetailHeaderView.swift */; };
 		0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547A95824F3E1C400393BB4 /* MainViewController.swift */; };
 		0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869324F3CEE200CA14CF /* AppDelegate.swift */; };
 		0578869824F3CEE200CA14CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869724F3CEE200CA14CF /* ViewController.swift */; };
@@ -40,6 +42,8 @@
 		0513C38F24F3ED9A00991B55 /* Repository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		051BC73024F51E970066B100 /* DispatchQue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQue+Extension.swift"; sourceTree = "<group>"; };
 		051BC73224F534FD0066B100 /* LoadingActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingActivityIndicator.swift; sourceTree = "<group>"; };
+		051BC73624F551690066B100 /* RepoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListCell.swift; sourceTree = "<group>"; };
+		051BC73924F553520066B100 /* DetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeaderView.swift; sourceTree = "<group>"; };
 		0547A95824F3E1C400393BB4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
 		0578869024F3CEE200CA14CF /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0578869324F3CEE200CA14CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -90,6 +94,31 @@
 				0513C38D24F3ED7900991B55 /* GitHubUserNetwrokModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		051BC73424F551540066B100 /* TableView */ = {
+			isa = PBXGroup;
+			children = (
+				051BC73824F5533C0066B100 /* Header */,
+				051BC73524F5515D0066B100 /* Cell */,
+			);
+			path = TableView;
+			sourceTree = "<group>";
+		};
+		051BC73524F5515D0066B100 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				051BC73624F551690066B100 /* RepoListCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		051BC73824F5533C0066B100 /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				051BC73924F553520066B100 /* DetailHeaderView.swift */,
+			);
+			path = Header;
 			sourceTree = "<group>";
 		};
 		0547A95A24F3E1CB00393BB4 /* Screens */ = {
@@ -263,6 +292,7 @@
 		058A75A824F4FB500053D361 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				051BC73424F551540066B100 /* TableView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -361,7 +391,9 @@
 				058A759824F3FCC80053D361 /* UserListCell.swift in Sources */,
 				058A759024F3FA010053D361 /* UIViewController+Extension.swift in Sources */,
 				0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */,
+				051BC73724F551690066B100 /* RepoListCell.swift in Sources */,
 				058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */,
+				051BC73A24F553520066B100 /* DetailHeaderView.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				051BC73324F534FD0066B100 /* LoadingActivityIndicator.swift in Sources */,
 				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,

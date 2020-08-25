@@ -8,8 +8,10 @@
 
 import Foundation
 
-struct Repository : Decodable {
-    let name            : String
+struct Repository : Decodable,RepoListCellable {
+  
+  
+    var name            : String
     let description     : String?
     let htmlUrl         : URL
     let openIssuesCount : Int

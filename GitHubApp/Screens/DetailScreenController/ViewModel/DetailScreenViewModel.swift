@@ -13,8 +13,8 @@ final class DetailScreenViewModel {
   
   var detailScreenModel : DetailScreenModel!
   
-  var detailModel       : DetailModel?
-  var repos             : [Repository]?
+  var detailModel       : DetailModel!
+  var repos             : [Repository] = []
   var error             : GitHubApiError?
   
 //  var userUrl   : URL
