@@ -20,15 +20,15 @@ final class MainScreenViewModel {
   var pagging : Int          = 0
   var isLoadingData          = false
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
-  
+  var currentUserString      = ""
 
   
   
-  func fetchUser(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
+  func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
 
     incrementPagging()
     
-    gitHubApi.fetchUsers(userName: filteringText, pages: pagging) { result in
+    gitHubApi.searchUsers(userName: filteringText, pages: pagging) { result in
           
           switch result {
           case .success(let userSearchResult):
@@ -41,6 +41,7 @@ final class MainScreenViewModel {
           
         }
   }
+
   
   func dropPagging() {
     pagging = 0

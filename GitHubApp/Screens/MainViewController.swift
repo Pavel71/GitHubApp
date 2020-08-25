@@ -58,7 +58,7 @@ class MainViewController: UITableViewController {
     
     self.tableView.tableFooterView = createFooterSpinner()
     
-     viewModel.fetchUser(filteringText: text) {[weak self] result in
+     viewModel.searchUsers(filteringText: text) {[weak self] result in
       
       self?.viewModel.isLoadingData = false
       
@@ -126,19 +126,29 @@ extension MainViewController {
   
   
 }
-// MARK: When scrol to Last Cell
+// MARK: - Navigation
 extension MainViewController {
   
-//  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//
-//    if indexPath.row == users.count - 5 && indexPath.row > 5 {
-//      print("Last Cell")
-//      guard let text = searchController.searchBar.text else {return}
-//
-//      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.1)
-//
-//    }
-//  }
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let user = users[indexPath.row]
+    print("Fetch user data",user.username)
+    
+    let detailScreenViewModel = DetailScreenViewModel(userUrl: user.url)
+    
+    detailScreenViewModel.fetchUser {[weak self] results in
+      switch results {
+      case .success(let detailModel):
+        print(detailModel)
+      case .failure(let error):
+        self?.showAlert(message: error.localizedDescription)
+      }
+    }
+    
+    
+  }
+}
+// MARK: When scrol to Last Cell
+extension MainViewController {
   
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     let position       = scrollView.contentOffset.y
@@ -160,14 +170,19 @@ extension MainViewController : UISearchResultsUpdating {
   
   func updateSearchResults(for searchController: UISearchController) {
     // Нужна проверка на дубликаты чтобы не дублировать запрос дважды
-    guard
-      let text          = searchController.searchBar.text,
-      text.isEmpty      == false
-      
-      else {return cleanUsers()}
     
-    viewModel.dropPagging()
-    perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.3)
+    guard
+      let text                    = searchController.searchBar.text,
+      text.isEmpty                == false
+    else {return cleanUsers()}
+    
+    if  viewModel.currentUserString != text {
+      
+      viewModel.currentUserString = text
+      viewModel.dropPagging()
+      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.3)
+    }
+    
 
   }
   

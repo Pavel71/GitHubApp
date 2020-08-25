@@ -23,17 +23,17 @@ struct GitHubUser : Decodable,UserListCellable {
     var avatarUrl    : URL
     var username     : String
     let url          : URL
-    let htmlUrl      : URL
-    let reposUrl     : URL
+//    let htmlUrl      : URL
+//    let reposUrl     : URL
     var type         : String
-    var repositories : [Repository]?
+    
     
     enum CodingKeys  : String, CodingKey {
         case avatarUrl
         case username = "login"
         case url
-        case htmlUrl
-        case reposUrl
+//        case htmlUrl
+//        case reposUrl
         case type
     }
 }

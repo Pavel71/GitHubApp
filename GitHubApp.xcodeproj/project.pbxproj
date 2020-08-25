@@ -26,6 +26,10 @@
 		058A75A024F425C60053D361 /* MainScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A759F24F425C60053D361 /* MainScreenViewModel.swift */; };
 		058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */; };
 		058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75A424F4627D0053D361 /* UIImage+Extensions.swift */; };
+		058A75AC24F4FB930053D361 /* DetailTasks.txt in Resources */ = {isa = PBXBuildFile; fileRef = 058A75AB24F4FB930053D361 /* DetailTasks.txt */; };
+		058A75AE24F4FBF70053D361 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75AD24F4FBF70053D361 /* DetailsViewController.swift */; };
+		058A75B024F509200053D361 /* DetailScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75AF24F509200053D361 /* DetailScreenModel.swift */; };
+		058A75B224F516090053D361 /* DetailScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75B124F516090053D361 /* DetailScreenViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +54,10 @@
 		058A759F24F425C60053D361 /* MainScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewModel.swift; sourceTree = "<group>"; };
 		058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLoadedImageView.swift; sourceTree = "<group>"; };
 		058A75A424F4627D0053D361 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		058A75AB24F4FB930053D361 /* DetailTasks.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = DetailTasks.txt; sourceTree = "<group>"; };
+		058A75AD24F4FBF70053D361 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		058A75AF24F509200053D361 /* DetailScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenModel.swift; sourceTree = "<group>"; };
+		058A75B124F516090053D361 /* DetailScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +92,8 @@
 		0547A95A24F3E1CB00393BB4 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				0513C38824F3E45600991B55 /* NetworkLayer */,
+				058A75A624F4FB2F0053D361 /* DetailScreenController */,
 				0547A95B24F3E1EF00393BB4 /* MainScreenController */,
 			);
 			path = Screens;
@@ -92,9 +102,8 @@
 		0547A95B24F3E1EF00393BB4 /* MainScreenController */ = {
 			isa = PBXGroup;
 			children = (
-				058A759E24F425AF0053D361 /* ViewModel */,
 				058A759324F3FBBF0053D361 /* MainScreenTasks */,
-				0513C38824F3E45600991B55 /* NetworkLayer */,
+				058A759E24F425AF0053D361 /* ViewModel */,
 				0547A95E24F3E20700393BB4 /* Model */,
 				0547A95D24F3E1FF00393BB4 /* View */,
 				0547A95C24F3E1FA00393BB4 /* Controller */,
@@ -226,6 +235,49 @@
 			path = CustomClasses;
 			sourceTree = "<group>";
 		};
+		058A75A624F4FB2F0053D361 /* DetailScreenController */ = {
+			isa = PBXGroup;
+			children = (
+				058A75AB24F4FB930053D361 /* DetailTasks.txt */,
+				058A75AA24F4FB5E0053D361 /* ViewModel */,
+				058A75A924F4FB540053D361 /* Model */,
+				058A75A824F4FB500053D361 /* View */,
+				058A75A724F4FB490053D361 /* Controller */,
+			);
+			path = DetailScreenController;
+			sourceTree = "<group>";
+		};
+		058A75A724F4FB490053D361 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				058A75AD24F4FBF70053D361 /* DetailsViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		058A75A824F4FB500053D361 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		058A75A924F4FB540053D361 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				058A75AF24F509200053D361 /* DetailScreenModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		058A75AA24F4FB5E0053D361 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				058A75B124F516090053D361 /* DetailScreenViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -288,6 +340,7 @@
 				058A759424F3FBC00053D361 /* MainScreenTasks in Resources */,
 				057886AB24F3CFA800CA14CF /* Tasks.txt in Resources */,
 				057886A024F3CEE700CA14CF /* LaunchScreen.storyboard in Resources */,
+				058A75AC24F4FB930053D361 /* DetailTasks.txt in Resources */,
 				0578869D24F3CEE700CA14CF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -305,14 +358,17 @@
 				058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,
+				058A75B024F509200053D361 /* DetailScreenModel.swift in Sources */,
 				0513C39024F3ED9A00991B55 /* Repository.swift in Sources */,
 				058A759D24F41AF40053D361 /* UIImageView+Extension.swift in Sources */,
 				058A75A024F425C60053D361 /* MainScreenViewModel.swift in Sources */,
+				058A75B224F516090053D361 /* DetailScreenViewModel.swift in Sources */,
 				0513C38C24F3E5B000991B55 /* GitHubApi.swift in Sources */,
 				058A759224F3FA060053D361 /* UIView+ Extension.swift in Sources */,
 				0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */,
 				0513C38E24F3ED7900991B55 /* GitHubUserNetwrokModel.swift in Sources */,
 				058A758E24F3F9140053D361 /* ServiceLocator.swift in Sources */,
+				058A75AE24F4FBF70053D361 /* DetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

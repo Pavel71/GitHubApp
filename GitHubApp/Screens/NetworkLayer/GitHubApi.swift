@@ -18,6 +18,7 @@ enum GitHubApiError: Error, LocalizedError, Identifiable {
     case decodingError
     case genericError
     case apiError(Error)
+    case userDetailsError
     
     var localizedDescription: String {
         switch self {
@@ -33,6 +34,8 @@ enum GitHubApiError: Error, LocalizedError, Identifiable {
             return "Decoding Erorr"
         case .genericError:
             return "An unknown error has been occured"
+        case .userDetailsError:
+          return "Ошибка при загрузке данных по пользователю"
         }
     }
 }
@@ -63,12 +66,14 @@ struct APIConstants {
 enum Endpoint {
   
   case userSearch(searchFilter: String,pages: Int)
+  case user(userName: String)
   
   var baseURL : URL {URL(string: "https://api.github.com")!}
   
   func path() -> String {
     switch self {
-    case .userSearch: return "/search/users"
+    case .userSearch : return "/search/users"
+    case .user       : return "/users"
     }
   }
   
@@ -84,6 +89,10 @@ enum Endpoint {
           URLQueryItem(name: "q", value: searchFilter.lowercased()),
           URLQueryItem(name: "per_page", value: "\(pages)")
         ]
+      case .user(let username):
+         urlComponents.queryItems = [
+                 URLQueryItem(name: ":", value: username),
+               ]
     }
       return urlComponents.url
   }
@@ -96,20 +105,9 @@ final class GitHubApi {
   static let shared = GitHubApi()
   
   
-  // fetch данные по запросу
-  
-  private func fetch(endPoint:Endpoint,
-                     completion: @escaping (Data?,URLResponse?, Error?) -> Void) {
-    guard let url = endPoint.absoluteURL else {return}
-        
-        
-    let request = URLRequest(url: url)
-    let task = createDataTask(from: request, completion: completion)
-    task.resume()
-    
-  }
-  // MARK: - Fetch Users
-  func fetchUsers(userName: String,
+
+// MARK: Search Users
+  func searchUsers(userName: String,
                   pages   : Int,
                   completion: @escaping (Result<UsersSearchResult,GitHubApiError>) -> Void
                   ) {
@@ -132,7 +130,7 @@ final class GitHubApi {
       if let data  = data {
         
         let results: UsersSearchResult? = self.convertNetworkDataToModel(data: data, type: UsersSearchResult.self)
-        
+
         if let res = results  {
           DispatchQueue.main.async {
               completion(.success(res))
@@ -146,32 +144,67 @@ final class GitHubApi {
       }
        
     }
-    
+
 
   }
   
+      // MARK: - Fetch User
+  func fetchUserByUrl(url: URL,
+                      completion: @escaping (Result<DetailScreenModel,GitHubApiError>) -> Void) {
+
+    do {
+      let data = try Data(contentsOf:url)
+      
+      let json = try JSONSerialization.jsonObject(with: data, options: [])
+      print(json)
+      let model = try APIConstants.jsonDecoder.decode(DetailScreenModel.self, from: data)
+      print(model)
+    }catch {
+      print("Get user Url data Error")
+      completion(.failure(.userDetailsError))
+    }
+
+  }
+
+  
+}
+
+// MARK: - PRIVATE METHODS Git Hub APi
+
+extension GitHubApi {
+  
+  // fetch данные по запросу
+  
+  private func fetch(endPoint:Endpoint,
+                     completion: @escaping (Data?,URLResponse?, Error?) -> Void) {
+    guard let url = endPoint.absoluteURL else {return}
+        
+    let request = URLRequest(url: url)
+    let task = createDataTask(from: request, completion: completion)
+    task.resume()
+    
+  }
+  
+  
+  private func createDataTask(from request: URLRequest,completion: @escaping (Data?,URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+     
+     return URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
+       DispatchQueue.main.async {
+         completion(data,response, error)
+       }
+     })
+   }
   private func convertNetworkDataToModel <T: Decodable>(
     data: Data,
     type: T.Type
     ) -> T? {
     do {
+      
         let model = try APIConstants.jsonDecoder.decode(type.self, from: data)
-        
+      
         return model
       } catch (_) {
         return nil
       }
   }
-  
-  private func createDataTask(from request: URLRequest,completion: @escaping (Data?,URLResponse?, Error?) -> Void) -> URLSessionDataTask {
-    
-    return URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-      DispatchQueue.main.async {
-        completion(data,response, error)
-      }
-    })
-  }
-  
-  //fetch данные по поиску
-  
 }
