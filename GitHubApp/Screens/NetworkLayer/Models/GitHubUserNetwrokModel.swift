@@ -24,7 +24,7 @@ struct GitHubUser : Decodable,UserListCellable {
     var username     : String
     let url          : URL
 //    let htmlUrl      : URL
-//    let reposUrl     : URL
+    var reposUrl     : URL
     var type         : String
     
     
@@ -33,7 +33,7 @@ struct GitHubUser : Decodable,UserListCellable {
         case username = "login"
         case url
 //        case htmlUrl
-//        case reposUrl
+        case reposUrl
         case type
     }
 }

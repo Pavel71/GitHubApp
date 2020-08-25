@@ -19,6 +19,7 @@ class MainViewController: UITableViewController {
     sc.searchBar.placeholder                = "Search for a GitHub user..."
     sc.definesPresentationContext           = true
     sc.searchBar.becomeFirstResponder()
+    
     return sc
   }()
   
@@ -46,7 +47,8 @@ class MainViewController: UITableViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    searchController.searchResultsUpdater      = self
+    searchController.searchBar.delegate        = self
+//    searchController.searchResultsUpdater      = self
     navigationItem.searchController            = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
   }
@@ -54,7 +56,12 @@ class MainViewController: UITableViewController {
   
   // MARK: - Fetch USers
   
-  @objc func fetchUsers(text: String) {
+  @objc func fetchUsers() {
+    
+   
+    let text = viewModel.currentUserString
+    
+    guard text.isEmpty == false else {return}
     
     self.tableView.tableFooterView = createFooterSpinner()
     
@@ -102,6 +109,7 @@ extension MainViewController {
   }
   
   private func cleanUsers() {
+    viewModel.currentUserString = ""
     self.users.removeAll()
     tableView.reloadData()
   }
@@ -133,17 +141,14 @@ extension MainViewController {
     let user = users[indexPath.row]
     print("Fetch user data",user.username)
     
-    let detailScreenViewModel = DetailScreenViewModel(userUrl: user.url)
+    let detailScreenViewModel = DetailScreenViewModel(
+      userUrl: user.url, reposUrl: user.reposUrl)
     
-    detailScreenViewModel.fetchUser {[weak self] results in
-      switch results {
-      case .success(let detailModel):
-        print(detailModel)
-      case .failure(let error):
-        self?.showAlert(message: error.localizedDescription)
-      }
+    detailScreenViewModel.fetchDetailScreenData { (result) in
+      
     }
     
+
     
   }
 }
@@ -155,37 +160,46 @@ extension MainViewController {
     let scrollViewLastCell = (tableView.contentSize.height - 100) - scrollView.frame.size.height
     
     guard let text = searchController.searchBar.text else {return}
+    
     if position > scrollViewLastCell && viewModel.isLoadingData == false && text.isEmpty == false {
-      viewModel.isLoadingData = true
-      print("Fetch New Data")
+      viewModel.isLoadingData     = true
+      viewModel.currentUserString = text
       
-      fetchUsers(text: text)
+      fetchUsers()
     }
   }
 }
 
 
-//MARK: - Set SearchController
-extension MainViewController : UISearchResultsUpdating {
+// MARK: - Set SearchController
+// UISearchResultsUpdating
+extension MainViewController :  UISearchBarDelegate{
   
-  func updateSearchResults(for searchController: UISearchController) {
-    // Нужна проверка на дубликаты чтобы не дублировать запрос дважды
+  
+  func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     
-    guard
-      let text                    = searchController.searchBar.text,
-      text.isEmpty                == false
-    else {return cleanUsers()}
+    cleanUsers()
+  }
+  
+  func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+    viewModel.currentUserString = searchText
     
-    if  viewModel.currentUserString != text {
+    if searchText.isEmpty {
       
-      viewModel.currentUserString = text
+      cleanUsers()
+      
+    } else {
       viewModel.dropPagging()
-      perform(#selector(fetchUsers(text: )), with: text, afterDelay: 0.3)
+      
+      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.fetchUsers), object: searchBar)
+      perform(#selector(self.fetchUsers), with: searchBar, afterDelay: 0.75)
     }
+    
+    
     
 
   }
-  
  
   
   

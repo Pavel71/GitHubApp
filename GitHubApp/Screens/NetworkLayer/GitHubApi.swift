@@ -150,15 +150,35 @@ final class GitHubApi {
   
       // MARK: - Fetch User
   func fetchUserByUrl(url: URL,
-                      completion: @escaping (Result<DetailScreenModel,GitHubApiError>) -> Void) {
+                      completion: @escaping (Result<DetailModel,GitHubApiError>) -> Void) {
 
     do {
       let data = try Data(contentsOf:url)
       
-      let json = try JSONSerialization.jsonObject(with: data, options: [])
-      print(json)
-      let model = try APIConstants.jsonDecoder.decode(DetailScreenModel.self, from: data)
-      print(model)
+//      let json = try JSONSerialization.jsonObject(with: data, options: [])
+//      print(json)
+      let model = try APIConstants.jsonDecoder.decode(DetailModel.self, from: data)
+      completion(.success(model))
+//      print(model)
+    }catch {
+      print("Get user Url data Error")
+      completion(.failure(.userDetailsError))
+    }
+
+  }
+  
+      // MARK: - Fetch Repos
+  func fetchReposByUrl(url: URL,
+                      completion: @escaping (Result<[Repository],GitHubApiError>) -> Void) {
+
+    do {
+      let data = try Data(contentsOf:url)
+      
+//      let json = try JSONSerialization.jsonObject(with: data, options: [])
+//      print(json)
+      let model = try APIConstants.jsonDecoder.decode([Repository].self, from: data)
+      completion(.success(model))
+//      print(model)
     }catch {
       print("Get user Url data Error")
       completion(.failure(.userDetailsError))

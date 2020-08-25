@@ -9,7 +9,13 @@
 import Foundation
 
 
-struct DetailScreenModel: Decodable,DetailsViewControllerModable {
+struct DetailScreenModel {
+  var details : DetailModel
+  var repos   : [Repository]?
+}
+
+
+struct DetailModel: Decodable,DetailsViewControllerModable {
   
   var login       : String
   

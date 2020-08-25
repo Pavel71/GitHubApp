@@ -12,6 +12,7 @@ protocol UserListCellable {
   var username    : String   {get set}
   var type        : String   {get set}
   var avatarUrl   : URL      {get set}
+  var reposUrl    : URL      {get set}
   
 }
 
