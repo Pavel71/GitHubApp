@@ -111,7 +111,7 @@ class DetailHeaderView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     
-    backgroundColor = #colorLiteral(red: 0.9491460919, green: 0.9487624764, blue: 0.9704342484, alpha: 1)
+    backgroundColor = UIColor(named: "HeaderBackround")
     setViews()
     
   }
