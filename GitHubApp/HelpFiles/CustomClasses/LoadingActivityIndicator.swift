@@ -11,18 +11,29 @@ import UIKit
 
 class LoadingActivityIndicator : UIView {
   
+  // MARK: - Views
+  
   var activityIndicator : UIActivityIndicatorView = {
-    let av = UIActivityIndicatorView(style: .white)
+    let av   = UIActivityIndicatorView(style: .gray)
+    av.color = .black
     return av
   }()
   
-  var loadingLabel: UILabel = {
+  private var loadingLabel: UILabel = {
     let label = UILabel()
-    label.font          = UIFont.systemFont(ofSize: 18, weight: .heavy)
-    label.textColor     = .white
+    label.font          = UIFont.systemFont(ofSize: 18, weight: .medium)
+    label.textColor     = .black
     label.text          = "Loading..."
     label.textAlignment = .center
     return label
+  }()
+  // MARK: - Stscks
+  private lazy var stackView : UIStackView = {
+    let vStack = UIStackView(arrangedSubviews: [loadingLabel,activityIndicator])
+    vStack.distribution = .fillEqually
+    vStack.spacing      = 5
+    vStack.axis         = .vertical
+    return vStack
   }()
   
   // MARK: - Init
@@ -30,8 +41,8 @@ class LoadingActivityIndicator : UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)
     setViews()
-    
-    backgroundColor    = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+    // #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
+    backgroundColor    = #colorLiteral(red: 0.9491460919, green: 0.9487624764, blue: 0.9704342484, alpha: 1)
     clipsToBounds      = true
     layer.cornerRadius = 15
   }
@@ -45,12 +56,8 @@ class LoadingActivityIndicator : UIView {
 // MARK: - Set Views
 extension LoadingActivityIndicator {
   private func setViews() {
-    let vStack = UIStackView(arrangedSubviews: [loadingLabel,activityIndicator])
-    vStack.distribution = .fillEqually
-    vStack.spacing      = 5
-    vStack.axis         = .vertical
     
-    addSubview(vStack)
-    vStack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+    addSubview(stackView)
+    stackView.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
   }
 }

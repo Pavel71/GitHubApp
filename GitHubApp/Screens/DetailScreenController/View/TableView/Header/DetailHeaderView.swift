@@ -9,20 +9,38 @@
 import UIKit
 
 protocol DetailHeaderViewable {
-  var avatarUrl : URL {get set}
+  var avatarUrl   : URL     {get set}
+  var login       : String  {get set}
+  var name        : String? {get set}
+  var createdAt   : String  {get set}
+  var location    : String? {get set}
 }
 
 class DetailHeaderView: UIView {
   
-  var avatarImageView: AsyncLoadedImageView = {
+  // MARK: - Views
+  
+  private var avatarImageView: AsyncLoadedImageView = {
     let iv = AsyncLoadedImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
     iv.contentMode        = .scaleAspectFit
     return iv
   }()
   
+  // MARK: - Stacks
+  
+  private lazy var stack: UIStackView = {
+    let vStack = UIStackView(arrangedSubviews: [avatarImageView,UIView()])
+        vStack.axis         = .vertical
+        vStack.distribution = .fill
+    return vStack
+  }()
+  
+  
+    // MARK: - Init
   override init(frame: CGRect) {
     super.init(frame: frame)
     
+    backgroundColor = #colorLiteral(red: 0.9491460919, green: 0.9487624764, blue: 0.9704342484, alpha: 1)
     setViews()
   }
   
@@ -37,35 +55,13 @@ extension DetailHeaderView {
   
   func setViews() {
     
-    setAvatarImageView()
-    
-//    let avatarContanerView = UIView()
-//
-//    avatarContanerView.addSubview(avatarImageView)
-//    avatarImageView.fillSuperview()
-//    avatarImageView.constrainHeight(constant: 150)
-//
-//    let vStack = UIStackView(arrangedSubviews: [avatarContanerView])
-//    vStack.axis         = .vertical
-//    vStack.distribution = .fill
-//
-//
-//    addSubview(vStack)
-//    vStack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
-  }
-  
-  func setAvatarImageView() {
-    let avatarContanerView = UIView()
-    
-    avatarContanerView.addSubview(avatarImageView)
-    avatarImageView.fillSuperview()
+    addSubview(stack)
+    stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
     
     avatarImageView.constrainHeight(constant: 150)
-    
-    addSubview(avatarContanerView)
-    avatarContanerView.anchor(top: topAnchor, leading: leadingAnchor, bottom: nil, trailing: trailingAnchor)
-    
+
   }
+  
 }
 
 
