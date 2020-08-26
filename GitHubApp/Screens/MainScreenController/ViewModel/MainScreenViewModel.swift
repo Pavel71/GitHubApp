@@ -31,7 +31,7 @@ final class MainScreenViewModel {
   
   // DetailScreenViewModel
   
-  var detailScreenViewModel : DetailScreenViewModel!
+  private var detailScreenViewModel : DetailScreenViewModel!
   
 
   
@@ -80,11 +80,12 @@ final class MainScreenViewModel {
   
 }
 
-// MARK: - Routing
+// MARK: - Get DetailViewModel
 extension MainScreenViewModel {
   
   
-  func routToDetailScreenController(indexPath: IndexPath,completion: @escaping (Result<Bool,GitHubApiError>) -> Void) {
+  func getDetailViewModel(indexPath: IndexPath,completion: @escaping (Result<DetailScreenViewModel,GitHubApiError>) -> Void) {
+    
     let user = users[indexPath.row]
        
     detailScreenViewModel = DetailScreenViewModel(userName: user.username)
@@ -95,8 +96,8 @@ extension MainScreenViewModel {
          case .failure(let error):
           completion(.failure(error))
           
-         case .success(let isSucces):
-           completion(.success(isSucces))
+         case .success(_):
+          completion(.success(self.detailScreenViewModel))
 
          }
          

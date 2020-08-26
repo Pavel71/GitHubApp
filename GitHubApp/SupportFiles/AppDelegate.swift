@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   private func root() {
-    window = UIWindow(frame: UIScreen.main.bounds)
+    window = AppState.shared.mainWindow
     let navController = UINavigationController(rootViewController: MainViewController())
     window?.rootViewController = navController
     window?.makeKeyAndVisible()
@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let locator = ServiceLocator.shared
     locator.addService(service: GitHubApi.shared)
+    locator.addService(service: AppState.shared)
     
   }
 

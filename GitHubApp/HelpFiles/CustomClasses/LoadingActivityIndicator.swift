@@ -31,7 +31,7 @@ class LoadingActivityIndicator : UIView {
     super.init(frame: frame)
     setViews()
     
-    backgroundColor    = .gray
+    backgroundColor    = #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1)
     clipsToBounds      = true
     layer.cornerRadius = 15
   }

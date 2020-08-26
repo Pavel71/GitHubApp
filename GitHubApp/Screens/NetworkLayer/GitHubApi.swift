@@ -85,7 +85,7 @@ enum Endpoint {
   
   var absoluteURL: URL? {
     
-      var queryURL = baseURL.appendingPathComponent(self.path())
+      let queryURL = baseURL.appendingPathComponent(self.path())
       let components = URLComponents(url: queryURL, resolvingAgainstBaseURL: true)
       guard var urlComponents = components else {
           return nil
@@ -182,6 +182,8 @@ final class GitHubApi {
       // Data
       if let data  = data {
         
+//        let jsonData =  try? JSONSerialization.jsonObject(with: data, options: [])
+//        print("User Json",jsonData)
         let results  = self.convertNetworkDataToModel(data: data, type: DetailModel.self)
 
         if let res = results  {
@@ -189,6 +191,7 @@ final class GitHubApi {
               completion(.success(res))
           }
         } else {
+//          print("User decoding Erorr")
           completion(.failure(.decodingError))
           
         }
@@ -221,6 +224,9 @@ final class GitHubApi {
       // Data
       if let data  = data {
         
+//        let jsonData =  try? JSONSerialization.jsonObject(with: data, options: [])
+//        print("Repos Json",jsonData)
+        
         let results  = self.convertNetworkDataToModel(data: data, type: [Repository].self)
 
         if let res = results  {
@@ -228,6 +234,7 @@ final class GitHubApi {
               completion(.success(res))
           }
         } else {
+//          print("Repos decoding Erorr")
           completion(.failure(.decodingError))
           
         }

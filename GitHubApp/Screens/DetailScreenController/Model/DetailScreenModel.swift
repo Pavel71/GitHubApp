@@ -21,7 +21,7 @@ struct DetailModel: Decodable,DetailHeaderViewable {
   
   var avatarUrl   : URL
   
-  var name        : String
+  var name        : String?
   
   var createdAt   : String
   

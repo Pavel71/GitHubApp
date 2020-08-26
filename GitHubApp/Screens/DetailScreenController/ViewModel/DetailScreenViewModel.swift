@@ -35,26 +35,31 @@ final class DetailScreenViewModel {
 
     dispatchGroup.enter()
 
-    DispatchQueue.global().async {
+//    print("Загрузка Юзеров")
       self.fetchUser { (result) in
-        self.dispatchGroup.leave()
-
+        
+//     print("Загрузка Юзеров законченна")
         switch result {
         case .success(let detailModel):
 //          print(detailModel)
+//          print("Загрузка Юзеров законченна успешно")
           self.detailModel = detailModel
         case .failure(let error):
+//          print("Загрузка Юзеров законченна с ошибкой")
           self.error = error
         }
+        self.dispatchGroup.leave()
 
       }
-    }
-// Loading Repos
-    dispatchGroup.enter()
 
-    DispatchQueue.global().async {
+    dispatchGroup.enter()
+//    print("Async code")
+
+
+//     print("Загрузка Repos")
       self.fetchRepos{ (result) in
-        self.dispatchGroup.leave()
+        
+//        print("Загрузка Repos законченна")
         switch result {
         case .success(let repos):
 //          print(repos)
@@ -62,9 +67,9 @@ final class DetailScreenViewModel {
         case .failure(let error):
           self.error = error
         }
+        self.dispatchGroup.leave()
       }
-    }
-//
+
     dispatchGroup.notify(queue: .main) {
       print("Загрузка всех данных Загрузились")
       DispatchQueue.main.async {
@@ -74,7 +79,7 @@ final class DetailScreenViewModel {
           
         } else {
           
-          let detailScreenModel = DetailScreenModel(details: self.detailModel!, repos: self.repos)
+          let detailScreenModel = DetailScreenModel(details: self.detailModel, repos: self.repos)
           self.detailScreenModel = detailScreenModel
           complatition(.success(true))
           
@@ -87,11 +92,11 @@ final class DetailScreenViewModel {
   // MARK: - Fetch User
   private func fetchUser(complatition: @escaping (Result<DetailModel,GitHubApiError>) -> Void) {
     gitHubApi.fetchUser(userName: userName, completion: complatition)
-//    gitHubApi.fetchUserByUrl(userName: userUrl, completion: complatition)
+
   }
   // MARK: - Fetch Repos
   private func fetchRepos(complatition: @escaping (Result<[Repository],GitHubApiError>) -> Void) {
     gitHubApi.fetchRepos(userName: userName, completion: complatition)
-//    gitHubApi.fetchReposByUrl(url: reposUrl, completion: complatition)
+
   }
 }

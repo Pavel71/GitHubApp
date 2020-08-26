@@ -23,11 +23,15 @@ class MainViewController: UITableViewController {
     return sc
   }()
   
-  let loadingActivityIndicator = LoadingActivityIndicator(frame: .init(x: 0, y: 0, width: 100, height: 100))
+//  let loadingActivityIndicator = LoadingActivityIndicator(frame: .init(x: 0, y: 0, width: 150, height: 100))
   
   // MARK: ViewModel
   
   var viewModel = MainScreenViewModel()
+  
+  // MARK: App State
+  
+  let appState: AppState! = ServiceLocator.shared.getService()
   
   // MARK: DataSource
   
@@ -59,9 +63,9 @@ class MainViewController: UITableViewController {
   
   // MARK: - Fetch USers
   
-  @objc func fetchUsers() {
-    print("Fetch Users")
-   
+  @objc func SearchUsers() {
+    
+   print("Search USers")
     let text = viewModel.currentUserString
     
     guard text.isEmpty == false else {return}
@@ -141,14 +145,15 @@ extension MainViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     showLoadingActivitIndicator()
-    viewModel.routToDetailScreenController(indexPath: indexPath) {[weak self] result in
+    viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
       
       switch result {
       case .failure(let error):
         self?.showAlert(message: error.localizedDescription)
-      case .success(_):
+      case .success(let detailViewModel):
         
-        let detailViewController = DetailsViewController(detailViewModel: (self?.viewModel.detailScreenViewModel)!)
+        let detailViewController = DetailsViewController(detailViewModel:detailViewModel)
+        
         self?.navigationController?.pushViewController(detailViewController, animated: true)
       }
 
@@ -159,23 +164,16 @@ extension MainViewController {
 
 // MARK: -  Activity Indicators
 extension MainViewController {
+//
   func setLoadingActivitIndicator() {
-    view.addSubview(loadingActivityIndicator)
-    loadingActivityIndicator.center   = view.center
-    loadingActivityIndicator.isHidden = true
+    appState.setLoadingActivityIndicator()
   }
   
   func showLoadingActivitIndicator() {
-    loadingActivityIndicator.activityIndicator.startAnimating()
-    loadingActivityIndicator.isHidden = false
+    appState.showLoadingActivitIndicator()
   }
   func dismisLoadingActivtiIndiactor() {
-   
-      self.loadingActivityIndicator.activityIndicator.stopAnimating()
-      self.loadingActivityIndicator.isHidden = true
-    
-    
-    
+    appState.dismisLoadingActivtiIndiactor()
   }
   
   // MARK: - Created Footer Spinner
@@ -203,7 +201,7 @@ extension MainViewController {
       viewModel.isLoadingData     = true
       viewModel.currentUserString = text
       
-      fetchUsers()
+      SearchUsers()
     }
   }
 }
@@ -231,8 +229,8 @@ extension MainViewController :  UISearchBarDelegate{
     } else {
       
       
-      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.fetchUsers), object: searchBar)
-      perform(#selector(self.fetchUsers), with: searchBar, afterDelay: 0.75)
+      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.SearchUsers), object: searchBar)
+      perform(#selector(self.SearchUsers), with: searchBar, afterDelay: 0.75)
     }
     
     
