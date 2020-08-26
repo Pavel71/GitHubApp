@@ -68,8 +68,9 @@ class DetailHeaderView: UIView {
       return hStack
     }()
   
+  
   private lazy var rightVStack: UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [nameStack,loginStack])
+    let stack = UIStackView(arrangedSubviews: [nameHStack,loginHStack])
         stack.axis         = .vertical
         stack.distribution = .fillEqually
         stack.spacing      = 5
@@ -77,35 +78,33 @@ class DetailHeaderView: UIView {
     return stack
   }()
   private lazy var bottomVStack: UIStackView = {
-    let hStack = UIStackView(arrangedSubviews: [locationStack,createdStack])
+    let hStack = UIStackView(arrangedSubviews: [locationHStack,createdHStack])
         hStack.axis         = .vertical
         hStack.distribution = .fillEqually
         hStack.spacing       = 5
     return hStack
   }()
   
+  private lazy var nameHStack : UIStackView = {
+    
+    let vStack = UIStackView(arrangedSubviews: [nameLabel])
+    vStack.distribution = .fill
+    vStack.alignment    = .fill
+    vStack.axis         = .vertical
+    nameLabel.numberOfLines = 0
+    
+    let stackView = UIStackView(arrangedSubviews: [nameTitleLabel,vStack])
+    stackView.alignment = .fill
+    stackView.axis      = .horizontal
+    
+    return stackView
+  }()
   
-  private lazy var locationStack = createSimpleHStack(view1: locationTitleLabel, view2: locationLabel)
-  private lazy var createdStack  = createSimpleHStack(view1: createdTitleLabel, view2: createdLabel)
-  private lazy var nameStack     = createSimpleHStack(view1: nameTitleLabel, view2: nameLabel)
-  private lazy var loginStack    = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel)
-  
-//  func createSimpleHStack(view1: UIView,view2: UIView) -> UIStackView {
-//    let hStack = UIStackView(arrangedSubviews: [view1,view2])
-//    hStack.distribution  = .fill
-//    hStack.axis          = .horizontal
-//    hStack.spacing       = 5
-//    hStack.alignment     = .fill
-//    return hStack
-//  }
-  
-//  func createSimpleVStack(view1: UIView,view2: UIView) -> UIStackView {
-//    let vStack = UIStackView(arrangedSubviews: [view1,view2])
-//    vStack.distribution  = .fillEqually
-//    vStack.axis          = .vertical
-//    vStack.spacing       = 5
-//    return vStack
-//  }
+  private lazy var locationHStack = createSimpleHStack(view1: locationTitleLabel, view2: locationLabel)
+  private lazy var createdHStack  = createSimpleHStack(view1: createdTitleLabel, view2: createdLabel)
+
+  private lazy var loginHStack    = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel)
+
   
   
     // MARK: - Init
@@ -133,6 +132,7 @@ extension DetailHeaderView {
     
     avatarImageView.constrainWidth(constant: 100)
     avatarImageView.constrainHeight(constant: 100)
+    
     
     [locationTitleLabel,createdTitleLabel] .forEach { (label) in
       label.constrainWidth(constant: 100)

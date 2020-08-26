@@ -47,21 +47,35 @@ class RepoListCell : UITableViewCell {
   //MARK: - StacksView
   
   private lazy var stack : UIStackView = {
-    let stack = UIStackView(arrangedSubviews: [languageStack,
-                                               repoStack,
+    let stack = UIStackView(arrangedSubviews: [languageHStack,
+                                               repoHStack,
                                                moreDataButton,
-                                               lastUpdateStack,
-                                               starsStack])
+                                               lastUpdateHStack,
+                                               starsHStack])
     stack.distribution = .equalSpacing
     stack.axis         = .vertical
     stack.spacing      = 5
     return stack
   }()
   
-  private lazy var languageStack = createSimpleHStack(view1: languageTitleLabel, view2: languageLabel)
-  private lazy var repoStack     = createSimpleHStack(view1: repoTitleLabel, view2: repoLabel)
-  private lazy var lastUpdateStack = createSimpleHStack(view1: updateDateTitleLabel, view2: updateDateLabel)
-  private lazy var starsStack      = createSimpleHStack(view1: starsTitleLabel, view2: starLabel)
+  
+  private lazy var repoHStack : UIStackView = {
+    let vStack = UIStackView(arrangedSubviews: [repoLabel])
+       vStack.distribution = .fill
+       vStack.alignment    = .fill
+       vStack.axis         = .vertical
+       repoLabel.numberOfLines = 0
+       
+       let stackView = UIStackView(arrangedSubviews: [repoTitleLabel,vStack])
+       stackView.alignment = .fill
+       stackView.axis      = .horizontal
+    return stackView
+  }()
+  
+  private lazy var languageHStack = createSimpleHStack(view1: languageTitleLabel, view2: languageLabel)
+//  private lazy var repoStack     = createSimpleHStack(view1: repoTitleLabel, view2: repoLabel)
+  private lazy var lastUpdateHStack = createSimpleHStack(view1: updateDateTitleLabel, view2: updateDateLabel)
+  private lazy var starsHStack      = createSimpleHStack(view1: starsTitleLabel, view2: starLabel)
   
   // MARK: Clousers
   
@@ -90,6 +104,10 @@ extension RepoListCell {
   func setViews() {
     addSubview(stack)
     stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+    
+    [repoTitleLabel,starsTitleLabel,languageTitleLabel,updateDateTitleLabel].forEach{
+      $0.constrainWidth(constant: 120)
+    }
   }
 }
 
@@ -107,11 +125,11 @@ extension RepoListCell {
       self.starLabel.text       = "\(viewModel.stars)"
       self.updateDateLabel.text = changeDateFormattWithTime(date: viewModel.updatedAt)
       
-      self.starsStack.isHidden      = false
-      self.lastUpdateStack.isHidden = false
+      self.starsHStack.isHidden      = false
+      self.lastUpdateHStack.isHidden = false
     } else {
-      self.starsStack.isHidden      = true
-      self.lastUpdateStack.isHidden = true
+      self.starsHStack.isHidden      = true
+      self.lastUpdateHStack.isHidden = true
     }
     
   }
