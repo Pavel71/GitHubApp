@@ -26,7 +26,7 @@ class DetailHeaderView: UIView {
     return iv
   }()
   // Name
-  private lazy var nameTitleLabel    = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Имя:")
+  private lazy var nameTitleLabel    = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Name:")
   private lazy var nameLabel         = createSimpleLabel(font: .systemFont(ofSize: 18))
   
     // Login
@@ -34,11 +34,11 @@ class DetailHeaderView: UIView {
   private lazy var loginLabel            = createSimpleLabel(font: .systemFont(ofSize: 18))
   
   // Created at
-  private lazy var createdTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Созданн:")
+  private lazy var createdTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Created:")
   private lazy var createdLabel: UILabel = createSimpleLabel(font: .systemFont(ofSize: 18))
   
   // Location
-  private lazy var locationTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Локация:")
+  private lazy var locationTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Location:")
   private lazy var locationLabel: UILabel = createSimpleLabel(font: .systemFont(ofSize: 18))
   
 //  func createSimpleLabel(font: UIFont,text:String? = nil) -> UILabel {
