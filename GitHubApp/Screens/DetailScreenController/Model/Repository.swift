@@ -8,12 +8,36 @@
 
 import Foundation
 
+
+//struct ReposResult : Decodable {
+//  var language        : String
+//  var repos           : [Repository]
+//  
+//  enum CodingKeys: String, CodingKey {
+//      case repos = "items"
+//      case language
+//  }
+//}
+
+
+
 struct Repository : Decodable,RepoListCellable {
   
   
-    var name            : String
-    let description     : String?
-    let htmlUrl         : URL
-    let openIssuesCount : Int
-    let forksCount      : Int
+  var name            : String
+  var language        : String?
+  
+  var isNeedMoreInfo  = false
+  var updatedAt       : String
+  var stars           : Int
+  
+     enum CodingKeys  : String, CodingKey {
+          case name
+          case language
+          case updatedAt
+          case stars = "watchers"
+          
+      }
+  
+  
 }

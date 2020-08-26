@@ -51,7 +51,10 @@ class DetailsViewController : UITableViewController {
   
   func configureTableView() {
     
+    tableView.estimatedRowHeight = UITableView.automaticDimension
     
+    
+    tableView.allowsSelection = false
     tableView.register(RepoListCell.self, forCellReuseIdentifier: RepoListCell.cellId)
     
     setDetailHeader()
@@ -72,6 +75,7 @@ extension DetailsViewController {
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: RepoListCell.cellId, for: indexPath) as! RepoListCell
     cell.configure(viewModel: repos[indexPath.row])
+    setCellSignals(cell)
     return cell
   }
   
@@ -80,17 +84,19 @@ extension DetailsViewController {
   }
 }
 
-// MARK: TableView Header
+// MARK: Cell Signals
 extension DetailsViewController {
   
-//  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//    let header = DetailHeaderView(frame: .zero)
-//    header.configure(viewModel: detailModel)
-//    return header
-//  }
-//
-//  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//    return headerHeigth
-//  }
+  func setCellSignals(_ cell: RepoListCell) {
+    cell.didTapMoreButtonClouser = {[weak self] button in
+      
+      guard
+        let indexPath = self?.tableView.indexPath(for: cell)
+      else {return}
+      
+      self?.repos[indexPath.row].isNeedMoreInfo.toggle()
+      self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+    }
+  }
   
 }

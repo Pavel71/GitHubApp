@@ -20,12 +20,10 @@ struct UsersSearchResult: Decodable {
 }
 
 struct GitHubUser : Decodable,UserListCellable {
-
   
     var avatarUrl    : URL
     var username     : String
     let url          : URL
-//    let htmlUrl      : URL
     var reposUrl     : URL
     var type         : String
     
@@ -34,7 +32,6 @@ struct GitHubUser : Decodable,UserListCellable {
         case avatarUrl
         case username = "login"
         case url
-//        case htmlUrl
         case reposUrl
         case type
     }

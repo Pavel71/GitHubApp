@@ -118,8 +118,62 @@ struct AnchoredConstraints {
 }
 
 
-
-
+// MARK: - Stack
+extension UIView {
+  func createSimpleHStack(view1: UIView,view2: UIView) -> UIStackView {
+    let hStack = UIStackView(arrangedSubviews: [view1,view2])
+    hStack.distribution  = .fill
+    hStack.axis          = .horizontal
+    hStack.spacing       = 5
+    hStack.alignment     = .fill
+    return hStack
+  }
+  
+  func createSimpleVStack(view1: UIView,view2: UIView) -> UIStackView {
+    let vStack = UIStackView(arrangedSubviews: [view1,view2])
+    vStack.distribution  = .fillEqually
+    vStack.axis          = .vertical
+    vStack.spacing       = 5
+    return vStack
+  }
+  
+  func createSimpleLabel(font: UIFont,text:String? = nil) -> UILabel {
+    let l = UILabel()
+    l.font          = font
+    l.text          = text
+    l.textAlignment = .left
+    l.sizeToFit()
+    return l
+  }
+  
+  func changeDateFormatt(date: String) -> String {
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"
+    var currentString = ""
+    
+    if let date = dateFormatter.date(from: date) {
+      dateFormatter.dateFormat = "dd-MM-yyyy"
+      currentString = dateFormatter.string(from: date)
+      
+    }
+    return currentString
+  }
+  
+  func changeDateFormattWithTime(date: String) -> String {
+    
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"
+    var currentString = ""
+    
+    if let date = dateFormatter.date(from: date) {
+      dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+      currentString = dateFormatter.string(from: date)
+      
+    }
+    return currentString
+  }
+}
 
 
 

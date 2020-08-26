@@ -26,29 +26,29 @@ class DetailHeaderView: UIView {
     return iv
   }()
   // Name
-  private lazy var nameTitleLabel    = createSimpleLabel(font: .systemFont(ofSize: 18),text: "Имя:")
+  private lazy var nameTitleLabel    = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Имя:")
   private lazy var nameLabel         = createSimpleLabel(font: .systemFont(ofSize: 18))
   
     // Login
-  private lazy var loginTitleLabel   = createSimpleLabel(font: .systemFont(ofSize: 18),text:"Login:")
-  private lazy var loginLabel        = createSimpleLabel(font: .systemFont(ofSize: 18))
+  private lazy var loginTitleLabel       = createSimpleLabel(font: .systemFont(ofSize: 20),text:"Login:")
+  private lazy var loginLabel            = createSimpleLabel(font: .systemFont(ofSize: 18))
   
   // Created at
-  private lazy var createdTitleLabel = createSimpleLabel(font: .systemFont(ofSize: 18),text: "Созданн:")
+  private lazy var createdTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Созданн:")
   private lazy var createdLabel: UILabel = createSimpleLabel(font: .systemFont(ofSize: 18))
   
   // Location
-  private lazy var locationTitleLabel = createSimpleLabel(font: .systemFont(ofSize: 18),text: "Локация:")
+  private lazy var locationTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Локация:")
   private lazy var locationLabel: UILabel = createSimpleLabel(font: .systemFont(ofSize: 18))
   
-  func createSimpleLabel(font: UIFont,text:String? = nil) -> UILabel {
-    let l = UILabel()
-    l.font          = font
-    l.text          = text
-    l.textAlignment = .left
-    l.sizeToFit()
-    return l
-  }
+//  func createSimpleLabel(font: UIFont,text:String? = nil) -> UILabel {
+//    let l = UILabel()
+//    l.font          = font
+//    l.text          = text
+//    l.textAlignment = .left
+//    l.sizeToFit()
+//    return l
+//  }
   
   // MARK: - Stacks
   
@@ -90,21 +90,22 @@ class DetailHeaderView: UIView {
   private lazy var nameStack     = createSimpleHStack(view1: nameTitleLabel, view2: nameLabel)
   private lazy var loginStack    = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel)
   
-  func createSimpleHStack(view1: UIView,view2: UIView) -> UIStackView {
-    let hStack = UIStackView(arrangedSubviews: [view1,view2])
-    hStack.distribution  = .fill
-    hStack.axis          = .horizontal
-    hStack.spacing       = 5
-    return hStack
-  }
+//  func createSimpleHStack(view1: UIView,view2: UIView) -> UIStackView {
+//    let hStack = UIStackView(arrangedSubviews: [view1,view2])
+//    hStack.distribution  = .fill
+//    hStack.axis          = .horizontal
+//    hStack.spacing       = 5
+//    hStack.alignment     = .fill
+//    return hStack
+//  }
   
-  func createSimpleVStack(view1: UIView,view2: UIView) -> UIStackView {
-    let vStack = UIStackView(arrangedSubviews: [view1,view2])
-    vStack.distribution  = .fillEqually
-    vStack.axis          = .vertical
-    vStack.spacing       = 5
-    return vStack
-  }
+//  func createSimpleVStack(view1: UIView,view2: UIView) -> UIStackView {
+//    let vStack = UIStackView(arrangedSubviews: [view1,view2])
+//    vStack.distribution  = .fillEqually
+//    vStack.axis          = .vertical
+//    vStack.spacing       = 5
+//    return vStack
+//  }
   
   
     // MARK: - Init
@@ -140,6 +141,7 @@ extension DetailHeaderView {
     [nameTitleLabel,loginTitleLabel] .forEach { (label) in
       label.constrainWidth(constant: 60)
     }
+    
 
   }
   
@@ -164,20 +166,6 @@ extension DetailHeaderView {
     
   }
   
-  private func changeDateFormatt(date: String) -> String {
-    
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"
-    var currentString = ""
-    
-    if let date = dateFormatter.date(from: date) {
-      dateFormatter.dateFormat = "dd-MM-yyyy"
-      currentString = dateFormatter.string(from: date)
-      
-      
-    }
-    return currentString
-  }
   
 
 }
