@@ -17,11 +17,15 @@ class RepoListCell : UITableViewCell {
    
   static let cellId = "RepoListCell"
   
+  // MARK: - Views
+  
   private let repoNameLabel: UILabel = {
     let l = UILabel()
     l.font = UIFont.systemFont(ofSize: 20)
     return l
   }()
+  
+  
     // MARK: - Init
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)

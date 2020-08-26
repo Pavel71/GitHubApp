@@ -59,7 +59,7 @@ class DetailsViewController : UITableViewController {
   
   func setDetailHeader() {
     
-    let header = DetailHeaderView(frame: .init(x: 0, y: 0, width: 0, height: 200))
+    let header = DetailHeaderView(frame: .init(x: 0, y: 0, width: 0, height: headerHeigth))
     header.configure(viewModel: detailModel)
     tableView.tableHeaderView = header
   }

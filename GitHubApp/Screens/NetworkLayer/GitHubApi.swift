@@ -54,7 +54,8 @@ struct APIConstants {
      let jsonDecoder = JSONDecoder()
      jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
      let dateFormatter        = DateFormatter()
-     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+     dateFormatter.dateFormat = "yyyy-MM-dd"
+      
      jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
       return jsonDecoder
     }()
