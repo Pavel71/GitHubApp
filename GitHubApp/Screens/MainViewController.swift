@@ -18,6 +18,8 @@ class MainViewController: UITableViewController {
     sc.obscuresBackgroundDuringPresentation = false
     sc.searchBar.placeholder                = "Search for a GitHub user..."
     sc.definesPresentationContext           = true
+    sc.dimsBackgroundDuringPresentation     = false
+    sc.hidesNavigationBarDuringPresentation = false
     sc.searchBar.becomeFirstResponder()
     
     return sc
