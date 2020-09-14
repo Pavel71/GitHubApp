@@ -17,6 +17,7 @@ class AsyncLoadedImageView: UIImageView {
     
   func loadImageUsingUrl(url: URL,completion: @escaping (Bool) -> Void) {
         
+    
       imageUrl = url
       image = #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true)
         

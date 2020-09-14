@@ -244,17 +244,6 @@ final class GitHubApi {
       }
        
     }
-    
-//    do {
-//      let data = try Data(contentsOf:url)
-//      
-//      let model = try APIConstants.jsonDecoder.decode([Repository].self, from: data)
-//
-//      completion(.success(model))
-//
-//    } catch {
-//      completion(.failure(.userDetailsError))
-//    }
 
   }
 
@@ -281,9 +270,13 @@ extension GitHubApi {
   private func createDataTask(from request: URLRequest,completion: @escaping (Data?,URLResponse?, Error?) -> Void) -> URLSessionDataTask {
      
      return URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
-       DispatchQueue.main.async {
-         completion(data,response, error)
-       }
+      // Позволит улучшить перформанс так как UIKit лучше адаптирует время для отрисовки рендеринга и тд
+      RunLoop.main.perform(inModes: [.common]) {
+        completion(data,response, error)
+      }
+//       DispatchQueue.main.async {
+//
+//       }
      })
    }
   private func convertNetworkDataToModel <T: Decodable>(

@@ -15,6 +15,8 @@
 		051BC73724F551690066B100 /* RepoListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73624F551690066B100 /* RepoListCell.swift */; };
 		051BC73A24F553520066B100 /* DetailHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73924F553520066B100 /* DetailHeaderView.swift */; };
 		051BC73E24F640C60066B100 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73D24F640C60066B100 /* AppState.swift */; };
+		053A37AE250FC89800ED0723 /* FetchUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053A37AD250FC89800ED0723 /* FetchUserOperation.swift */; };
+		053A37B0250FC93300ED0723 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053A37AF250FC93300ED0723 /* AsyncOperation.swift */; };
 		0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547A95824F3E1C400393BB4 /* MainViewController.swift */; };
 		0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869324F3CEE200CA14CF /* AppDelegate.swift */; };
 		0578869824F3CEE200CA14CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0578869724F3CEE200CA14CF /* ViewController.swift */; };
@@ -46,6 +48,8 @@
 		051BC73624F551690066B100 /* RepoListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoListCell.swift; sourceTree = "<group>"; };
 		051BC73924F553520066B100 /* DetailHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeaderView.swift; sourceTree = "<group>"; };
 		051BC73D24F640C60066B100 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		053A37AD250FC89800ED0723 /* FetchUserOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserOperation.swift; sourceTree = "<group>"; };
+		053A37AF250FC93300ED0723 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		0547A95824F3E1C400393BB4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
 		0578869024F3CEE200CA14CF /* GitHubApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0578869324F3CEE200CA14CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -84,6 +88,7 @@
 		0513C38824F3E45600991B55 /* NetworkLayer */ = {
 			isa = PBXGroup;
 			children = (
+				053A37AC250FC85F00ED0723 /* Operation */,
 				0513C38B24F3E5B000991B55 /* GitHubApi.swift */,
 				0513C39124F3EDA300991B55 /* Models */,
 			);
@@ -138,6 +143,15 @@
 				051BC73D24F640C60066B100 /* AppState.swift */,
 			);
 			path = AppState;
+			sourceTree = "<group>";
+		};
+		053A37AC250FC85F00ED0723 /* Operation */ = {
+			isa = PBXGroup;
+			children = (
+				053A37AF250FC93300ED0723 /* AsyncOperation.swift */,
+				053A37AD250FC89800ED0723 /* FetchUserOperation.swift */,
+			);
+			path = Operation;
 			sourceTree = "<group>";
 		};
 		0547A95A24F3E1CB00393BB4 /* Screens */ = {
@@ -413,6 +427,7 @@
 				051BC73724F551690066B100 /* RepoListCell.swift in Sources */,
 				058A75A524F4627D0053D361 /* UIImage+Extensions.swift in Sources */,
 				051BC73A24F553520066B100 /* DetailHeaderView.swift in Sources */,
+				053A37AE250FC89800ED0723 /* FetchUserOperation.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				051BC73324F534FD0066B100 /* LoadingActivityIndicator.swift in Sources */,
 				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,
@@ -428,6 +443,7 @@
 				0513C38E24F3ED7900991B55 /* GitHubUserNetwrokModel.swift in Sources */,
 				051BC73124F51E970066B100 /* DispatchQue+Extension.swift in Sources */,
 				058A758E24F3F9140053D361 /* ServiceLocator.swift in Sources */,
+				053A37B0250FC93300ED0723 /* AsyncOperation.swift in Sources */,
 				058A75AE24F4FBF70053D361 /* DetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

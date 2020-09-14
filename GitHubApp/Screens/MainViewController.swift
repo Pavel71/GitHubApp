@@ -9,7 +9,7 @@
 import UIKit
 
 
-class MainViewController: UITableViewController {
+class MainViewController: UIViewController {
   
   // MARK: Outlets
   
@@ -23,6 +23,14 @@ class MainViewController: UITableViewController {
     sc.searchBar.becomeFirstResponder()
     
     return sc
+  }()
+  
+  
+  private lazy var tableView : UITableView = {
+    let tableView = UITableView(frame: .zero, style: .plain)
+    tableView.dataSource = self
+    tableView.delegate   = self
+    return tableView
   }()
   
 //  let loadingActivityIndicator = LoadingActivityIndicator(frame: .init(x: 0, y: 0, width: 150, height: 100))
@@ -39,9 +47,11 @@ class MainViewController: UITableViewController {
   
   var users : [GitHubUser] = [] {
     didSet {
-      DispatchQueue.main.async {
-        self.tableView.reloadData()
-      }
+//      DispatchQueue.main.async {
+    
+      self.tableView.reloadData()
+        
+//      }
       
     }
   }
@@ -65,7 +75,7 @@ class MainViewController: UITableViewController {
   
   // MARK: - Fetch USers
   
-  @objc func SearchUsers() {
+  @objc func searchUsers() {
     
    print("Search USers")
     let text = viewModel.currentUserString
@@ -105,6 +115,9 @@ class MainViewController: UITableViewController {
 extension MainViewController {
   
   private func configureTableView() {
+    
+    view.addSubview(tableView)
+    tableView.fillSuperview()
     registerTableViewCell()
   }
   
@@ -112,18 +125,14 @@ extension MainViewController {
     tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
   }
   
-  private func cleanUsers() {
-   
-    viewModel.resetRequestProperty()
-    self.users.removeAll()
-    tableView.reloadData()
-  }
+
 }
 
 // MARK: - TableView Delegate and DataSource
 
-extension MainViewController {
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+extension MainViewController: UITableViewDataSource {
+  
+   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: UserListCell.cellId, for: indexPath) as! UserListCell
     cell.configure(viewModel: users[indexPath.row])
 
@@ -132,7 +141,7 @@ extension MainViewController {
 
   
   
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return users.count
   }
   
@@ -142,9 +151,7 @@ extension MainViewController {
 // MARK: - Navigation
 extension MainViewController {
   
-
-  
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
     showLoadingActivitIndicator()
     viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
@@ -191,9 +198,10 @@ extension MainViewController {
   }
 }
 // MARK: Scroll to Last Cell
-extension MainViewController {
+extension MainViewController: UITableViewDelegate {
   
-  override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+   func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    
     let position       = scrollView.contentOffset.y
     let scrollViewLastCell = (tableView.contentSize.height + 30) - scrollView.frame.size.height
     
@@ -203,7 +211,7 @@ extension MainViewController {
       viewModel.isLoadingData     = true
       viewModel.currentUserString = text
       
-      SearchUsers()
+      searchUsers()
     }
   }
 }
@@ -231,13 +239,17 @@ extension MainViewController :  UISearchBarDelegate{
     } else {
       
       
-      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.SearchUsers), object: searchBar)
-      perform(#selector(self.SearchUsers), with: searchBar, afterDelay: 0.75)
+      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.searchUsers), object: searchBar)
+      perform(#selector(self.searchUsers), with: searchBar, afterDelay: 0.75)
     }
-    
-    
-    
 
+  }
+  
+  private func cleanUsers() {
+   
+    viewModel.resetRequestProperty()
+    self.users.removeAll()
+    tableView.reloadData()
   }
  
   

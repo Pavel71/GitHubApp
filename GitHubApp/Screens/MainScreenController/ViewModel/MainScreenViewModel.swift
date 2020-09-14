@@ -38,7 +38,6 @@ final class MainScreenViewModel {
   // MARK: - Search Users
   
   func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
-
     
     if (pagging < totalCount && pagging < 100) || pagging == 0 {
       
