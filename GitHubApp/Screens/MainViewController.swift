@@ -93,40 +93,49 @@ class MainViewController: UIViewController {
      self.tableView.tableFooterView = createFooterSpinner()
     
     viewModel.searchUsers(filteringText: text) { (result) in
-      RunLoop.main.perform(inModes: [.common]) {[weak self] in
-        guard let self = self else { return }
+      
         switch result {
         case .failure(let error):
-          self.showAlert(message: error.localizedDescription)
-          self.dismissFooterIndicator()
+          print(error,"Network Error")
+//          self.showAlert(message: error.localizedDescription)
+          RunLoop.main.perform(inModes: [.common]) {[weak self] in
+            self?.dismissFooterIndicator()
+          }
         case .success(let users):
+
           
           self.users = users
+          
+          RunLoop.main.perform(inModes: [.common]) {[weak self] in
+            guard let self = self else { return }
             self.tableView.reloadData()
+            self.dismissFooterIndicator()
+            self.viewModel.isSearchingUsers = false
+          }
           
         }
         
-        self.dismissFooterIndicator()
         
-      }
+        
+      
     }
     
   }
   
-//  private func getDiffusers(newUsers: [GitHubUser]) -> [GitHubUser] {
-//
-//    return newUsers.filter{self.users.contains($0) == false}
-//  }
-//
-//
-//  private func calculateIndexPathsToReload(from newUsers: [GitHubUser]) -> [IndexPath] {
-//
-//    let startIndex = users.count
-//    let endIndex = users.count + newUsers.count
-//
-//    print(startIndex,endIndex,"Indexes")
-//    return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
-//  }
+  private func getDiffusers(newUsers: [GitHubUser]) -> [GitHubUser] {
+
+    return newUsers.filter{self.users.contains($0) == false}
+  }
+
+
+  private func calculateIndexPathsToReload(from newUsers: [GitHubUser]) -> [IndexPath] {
+
+    let startIndex = users.count
+    let endIndex = users.count  + newUsers.count
+
+    print(startIndex,endIndex,"Indexes")
+    return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
+  }
   
   
   
@@ -175,7 +184,6 @@ extension MainViewController: UITableViewDataSource {
 
     }
     
-
     return cell
   }
 
@@ -193,16 +201,36 @@ extension MainViewController: UITableViewDataSource {
 
 extension MainViewController: UITableViewDelegate {
   
+  
+  
+  func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    if let operation = viewModel.avatarLoadedInProgress[indexPath] {
+      print("Cancel Oper,",indexPath)
+          operation.cancel()
+          viewModel.avatarLoadedInProgress.removeValue(forKey: indexPath)
+        }
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 120
+  }
+  
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
+    
+//     ANimate Cell
+//    let animation = AnimationFactory.makeFadeAnimation(duration: 0.5, delayFactor: 0)
+//    let animator = Animator(animation: animation)
+//    animator.animate(cell: cell, at: indexPath, in: tableView)
     
     let user = users[indexPath.row]
     
     // в кеше нет картинки
      if imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) == nil {
-      
+      print("Load Ava WIll Display",indexPath)
       loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
-           
        }
+    
   }
   
 
@@ -212,21 +240,22 @@ extension MainViewController {
   
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    
-    viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
-      
-      switch result {
-      case .failure(let error):
-        self?.showAlert(message: error.localizedDescription)
-      case .success(let detailViewModel):
-        
-        let detailViewController = DetailsViewController(detailViewModel:detailViewModel)
-        
-        self?.navigationController?.pushViewController(detailViewController, animated: true)
-      }
+    print(indexPath,"Selected \(self.users[indexPath.row].username)")
 
-       
-    }
+//    viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
+//
+//      switch result {
+//      case .failure(let error):
+//        self?.showAlert(message: error.localizedDescription)
+//      case .success(let detailViewModel):
+//
+//        let detailViewController = DetailsViewController(detailViewModel:detailViewModel)
+//
+//        self?.navigationController?.pushViewController(detailViewController, animated: true)
+//      }
+//
+//
+//    }
   }
 }
 
@@ -252,8 +281,8 @@ extension MainViewController {
 private extension MainViewController {
   
   func isLoadingCell(for indexPath: IndexPath) -> Bool {
-//    print(indexPath.row,viewModel.pagging)
-    return indexPath.row >= viewModel.getPagging() - 1
+//    print(indexPath.row ,viewModel.getPagging())
+    return viewModel.getPagging() - 1 <= indexPath.row
   }
   
   func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
@@ -266,11 +295,15 @@ private extension MainViewController {
 extension MainViewController: UITableViewDataSourcePrefetching {
   
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-    
     if indexPaths.contains(where: isLoadingCell) {
       // Пора загружать данные
-      viewModel.incrementPagging()
-      searchUsersByOperation()
+      // тут нужно отменить операцию спрева если срабатывает запрос несколько раз
+     if viewModel.isSearchingUsers == false {
+        viewModel.isSearchingUsers = true
+        self.viewModel.incrementPagging()
+        searchUsersByOperation()
+      }
+      
     }
   }
   // Отмена

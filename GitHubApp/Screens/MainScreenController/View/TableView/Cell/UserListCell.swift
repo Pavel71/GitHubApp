@@ -16,6 +16,8 @@ protocol UserListCellable {
   
 }
 
+// Сделать заглушку просто серой а не эту жирную картинку еще и с ресайзингом! в жопу его!
+
 // Здесь нам нужно получить урл аватарки и загрузить его в эту конкретную ячейку!
 
 class UserListCell: UITableViewCell {
@@ -38,17 +40,12 @@ class UserListCell: UITableViewCell {
     return l
   }()
   
-//  private var avatarImageView: AsyncLoadedImageView = {
-//    let iv = AsyncLoadedImageView(image: #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true))
-//    iv.contentMode = .scaleAspectFit
-//    iv.translatesAutoresizingMaskIntoConstraints = false
-//    return iv
-//  }()
-  
   private var avatarImageView: UIImageView = {
-    let iv = UIImageView(image: #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true))
+    let iv = UIImageView()
     iv.contentMode = .scaleAspectFit
-    iv.backgroundColor = .white
+    iv.backgroundColor = .lightGray
+    iv.clipsToBounds = true
+    iv.layer.cornerRadius = 15
     iv.translatesAutoresizingMaskIntoConstraints = false
     return iv
   }()
@@ -76,12 +73,13 @@ class UserListCell: UITableViewCell {
   
 
    
-   private var stackViewConstraints: [NSLayoutConstraint] {
+  private var stackViewConstraints: [NSLayoutConstraint] {
     [stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
      stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
      stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
      stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-    avatarImageView.widthAnchor.constraint(equalToConstant: 100)
+     avatarImageView.widthAnchor.constraint(equalToConstant: contentView.height - 20),
+     avatarImageView.heightAnchor.constraint(equalToConstant: contentView.height - 20)
     ]
    }
   
@@ -138,27 +136,26 @@ extension UserListCell {
         if let image = image {
           setImageToAvatarImageView(image)
             self.avatarImageView.alpha = 0
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.8, animations: {
                 self.avatarImageView.alpha = 1.0
             })
             
         } else {
-          self.avatarImageView.image = #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true)
           self.avatarImageView.alpha = 0.5
         }
     }
   
   func setImageToAvatarImageView(_ image: UIImage) {
-    self.avatarImageView.image = image.resizeImage(100, opaque: true)
+    self.avatarImageView.image = image
     self.avatarImageView.roundCornersForAspectFit(radius: 15)
     
   }
   
   override func prepareForReuse() {
-    avatarImageView.image = #imageLiteral(resourceName: "avatarPlaceholder").resizeImage(100, opaque: true)
-    self.avatarImageView.roundCornersForAspectFit(radius: 15)
+    avatarImageView.image = nil
     nameLabel.text        = nil
     typeLabel.text        = nil
+    
   }
   
 }

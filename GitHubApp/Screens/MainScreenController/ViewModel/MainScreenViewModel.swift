@@ -20,12 +20,13 @@ final class MainScreenViewModel {
   // MainScreenPropertys
   var users   : [GitHubUser] = []
 
-  private var pagging       : Int    = 20
+  private var pagging       : Int    = 21
   private var totalCount    : Int    = 0
   
 
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var currentUserString      = ""
+  var isSearchingUsers       = false
   
   //MARK: - Search Operation
   var loadQueue = OperationQueue()
@@ -58,7 +59,9 @@ final class MainScreenViewModel {
   
   func loadAvatarImage(url: URL,indexPath: IndexPath, complation: @escaping ((UIImage?) -> Void) ) {
     
-     let downloadOp = AvatarImagesLoadedOperation(imageUrl: url)
+
+    
+    let downloadOp = AvatarImagesLoadedOperation(imageUrl: url)
     
     downloadOp.didLoadedImage = { image in
       complation(image)
@@ -77,7 +80,7 @@ final class MainScreenViewModel {
   func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
     
     if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
-      fetchUsersOperation.cancel()
+      loadQueue.cancelAllOperations()
     }
     
     // Нельзя загружать больше 100 из за требований APi
@@ -103,17 +106,17 @@ final class MainScreenViewModel {
   
   func cancelSearchingUsersOperation() {
     if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
-      fetchUsersOperation.cancel()
+      loadQueue.cancelAllOperations()
     }
   }
   
 
   // MARK: - Pagging
   func dropPagging() {
-    pagging = 20
+    pagging = 21
   }
   func incrementPagging() {
-    pagging += 20
+    pagging += 21
   }
   func getPagging() -> Int {
     return pagging

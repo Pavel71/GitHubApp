@@ -38,6 +38,7 @@
 		058A75AE24F4FBF70053D361 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75AD24F4FBF70053D361 /* DetailsViewController.swift */; };
 		058A75B024F509200053D361 /* DetailScreenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75AF24F509200053D361 /* DetailScreenModel.swift */; };
 		058A75B224F516090053D361 /* DetailScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058A75B124F516090053D361 /* DetailScreenViewModel.swift */; };
+		05D6D2852511187A0012E075 /* Animator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05D6D2842511187A0012E075 /* Animator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		058A75AD24F4FBF70053D361 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		058A75AF24F509200053D361 /* DetailScreenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenModel.swift; sourceTree = "<group>"; };
 		058A75B124F516090053D361 /* DetailScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailScreenViewModel.swift; sourceTree = "<group>"; };
+		05D6D2842511187A0012E075 /* Animator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -301,6 +303,7 @@
 			children = (
 				058A75A224F456FB0053D361 /* AsyncLoadedImageView.swift */,
 				051BC73224F534FD0066B100 /* LoadingActivityIndicator.swift */,
+				05D6D2842511187A0012E075 /* Animator.swift */,
 			);
 			path = CustomClasses;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				058A759224F3FA060053D361 /* UIView+ Extension.swift in Sources */,
 				0578869424F3CEE200CA14CF /* AppDelegate.swift in Sources */,
 				051BC73E24F640C60066B100 /* AppState.swift in Sources */,
+				05D6D2852511187A0012E075 /* Animator.swift in Sources */,
 				0513C38E24F3ED7900991B55 /* GitHubUserNetwrokModel.swift in Sources */,
 				051BC73124F51E970066B100 /* DispatchQue+Extension.swift in Sources */,
 				058A758E24F3F9140053D361 /* ServiceLocator.swift in Sources */,
@@ -595,7 +599,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = PavelM.GitHubApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -614,7 +618,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = PavelM.GitHubApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
