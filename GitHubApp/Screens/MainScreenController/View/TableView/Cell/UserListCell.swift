@@ -138,7 +138,7 @@ extension UserListCell {
         if let image = image {
           setImageToAvatarImageView(image)
             self.avatarImageView.alpha = 0
-            UIView.animate(withDuration: 0.2, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 self.avatarImageView.alpha = 1.0
             })
             

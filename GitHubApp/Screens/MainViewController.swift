@@ -33,6 +33,11 @@ class MainViewController: UIViewController {
     tableView.dataSource         = self
     tableView.prefetchDataSource = self
     tableView.showsVerticalScrollIndicator = false
+    tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
+//    tableView.register(UserListCellFrame.self, forCellReuseIdentifier: UserListCellFrame.cellId)
+    
+//    tableView.rowHeight = UITableView.automaticDimension
+//    tableView.estimatedRowHeight = 100
     return tableView
   }()
   
@@ -56,8 +61,8 @@ class MainViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
   
-    configureTableView()
-    setLoadingActivitIndicator()
+    addTableView()
+
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +72,12 @@ class MainViewController: UIViewController {
     navigationItem.searchController            = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
   }
-  
+  private func addTableView() {
+    
+    view.addSubview(tableView)
+    tableView.fillSuperview()
+    
+  }
   
   
   // MARK: Fetch By Operation
@@ -90,18 +100,36 @@ class MainViewController: UIViewController {
           self.showAlert(message: error.localizedDescription)
           self.dismissFooterIndicator()
         case .success(let users):
+          
           self.users = users
-          self.dismissFooterIndicator()
-          print("Reload Data")
-          // вот здесь можно попробовать оптимизировать обновление таблицы!
-          self.tableView.reloadData()
+            self.tableView.reloadData()
+          
         }
+        
+        self.dismissFooterIndicator()
         
       }
     }
     
-   
   }
+  
+//  private func getDiffusers(newUsers: [GitHubUser]) -> [GitHubUser] {
+//
+//    return newUsers.filter{self.users.contains($0) == false}
+//  }
+//
+//
+//  private func calculateIndexPathsToReload(from newUsers: [GitHubUser]) -> [IndexPath] {
+//
+//    let startIndex = users.count
+//    let endIndex = users.count + newUsers.count
+//
+//    print(startIndex,endIndex,"Indexes")
+//    return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0) }
+//  }
+  
+  
+  
   let imageCache = NSCache<NSString, UIImage>()
   // MARK: Load Avatar Image
   private func loadAvatarImage(url: URL,indexPath: IndexPath) {
@@ -129,22 +157,6 @@ class MainViewController: UIViewController {
   
 }
 
-// MARK: - TableView Configure
-extension MainViewController {
-  
-  private func configureTableView() {
-    
-    view.addSubview(tableView)
-    tableView.fillSuperview()
-    registerTableViewCell()
-  }
-  
-  private func registerTableViewCell() {
-    tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
-  }
-  
-
-}
 
 // MARK: - TableView  DataSource
 
@@ -156,15 +168,13 @@ extension MainViewController: UITableViewDataSource {
     let user = users[indexPath.row]
     cell.configure(viewModel: user)
     
+    // Если есть в кеше то достаем оттуда
     if let imageFromCache = imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) {
-      
+
       cell.setImageToAvatarImageView(imageFromCache)
-        
-    } else {
-      loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
+
     }
     
-    cell.configure(viewModel: user)
 
     return cell
   }
@@ -182,21 +192,27 @@ extension MainViewController: UITableViewDataSource {
 // MARK: - TableView  Delegate
 
 extension MainViewController: UITableViewDelegate {
-    // MARK: Cancel Avatar Loaded
-   func tableView(_ tableView: UITableView,didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     
-    if let operation = viewModel.avatarLoadedInProgress[indexPath] {
-      print("Cancel Operation")
-        operation.cancel()
-    }
+    let user = users[indexPath.row]
+    
+    // в кеше нет картинки
+     if imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) == nil {
+      
+      loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
+           
+       }
   }
+  
+
 }
 // MARK: - Navigation
 extension MainViewController {
   
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    showLoadingActivitIndicator()
+    
     viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
       
       switch result {
@@ -209,26 +225,16 @@ extension MainViewController {
         self?.navigationController?.pushViewController(detailViewController, animated: true)
       }
 
-       self?.dismisLoadingActivtiIndiactor()
+       
     }
   }
 }
 
-// MARK: -  Activity Indicators
+ // MARK: - Created Footer Spinner
 extension MainViewController {
-//
-  func setLoadingActivitIndicator() {
-    appState.setLoadingActivityIndicator()
-  }
+
   
-  func showLoadingActivitIndicator() {
-    appState.showLoadingActivitIndicator()
-  }
-  func dismisLoadingActivtiIndiactor() {
-    appState.dismisLoadingActivtiIndiactor()
-  }
-  
-  // MARK: - Created Footer Spinner
+ 
   
   func createFooterSpinner() -> UIView {
     let activityIndicator = UIActivityIndicatorView(style: .gray)
@@ -261,12 +267,22 @@ extension MainViewController: UITableViewDataSourcePrefetching {
   
   func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
     
-    
     if indexPaths.contains(where: isLoadingCell) {
       // Пора загружать данные
       viewModel.incrementPagging()
       searchUsersByOperation()
     }
+  }
+  // Отмена
+  func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+    
+    indexPaths.forEach {
+      if let operation = viewModel.avatarLoadedInProgress[$0] {
+        operation.cancel()
+        viewModel.avatarLoadedInProgress.removeValue(forKey: $0)
+      }
+    }
+    
   }
 }
 

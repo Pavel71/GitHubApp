@@ -14,12 +14,15 @@ extension UIViewController {
   
   func showAlert(title: String = "Что-то пошло не так", message: String) {
     
-    let alertControlelr = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
     
     let alertAction = UIAlertAction(title: "Ok", style: .default, handler: nil)
     
-    alertControlelr.addAction(alertAction)
-    present(alertControlelr, animated: true, completion: nil)
+    alertController.addAction(alertAction)
+    alertController.popoverPresentationController?.permittedArrowDirections = .init(rawValue: 0)
+    alertController.popoverPresentationController?.sourceView = self.view
+    alertController.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+    present(alertController, animated: true, completion: nil)
   }
 
   

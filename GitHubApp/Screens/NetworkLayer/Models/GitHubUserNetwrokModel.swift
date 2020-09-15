@@ -36,3 +36,9 @@ struct GitHubUser : Decodable,UserListCellable {
         case type
     }
 }
+extension  GitHubUser : Equatable {
+  
+  static func ==(lhs: GitHubUser,rhs:GitHubUser) -> Bool {
+    return lhs.username == rhs.username
+  }
+}
