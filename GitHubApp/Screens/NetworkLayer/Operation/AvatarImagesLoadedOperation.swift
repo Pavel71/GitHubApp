@@ -10,21 +10,7 @@ import UIKit
 
 
 final class AvatarImagesLoadedOperation : AsyncOperation {
-  
-  static var downloadsInProgress: [IndexPath: Operation] = [:]
-  
-    static var downloadQueue: OperationQueue = {
-        let queue = OperationQueue()
-        queue.name = "Avatars Download Queue"
-        return queue
-    }()
-    
-    
-    static func cancelAllOperations() {
-        downloadQueue.cancelAllOperations()
-        downloadsInProgress = [:]
-    }
-  
+
   
   private var task: URLSessionDataTask?
   

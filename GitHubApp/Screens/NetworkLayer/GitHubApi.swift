@@ -146,9 +146,9 @@ final class GitHubApi {
         let results: UsersSearchResult? = self.convertNetworkDataToModel(data: data, type: UsersSearchResult.self)
 
         if let res = results  {
-          DispatchQueue.main.async {
-              completion(.success(res))
-          }
+          
+          completion(.success(res))
+          
           
         } else {
           completion(.failure(.decodingError))
@@ -271,9 +271,9 @@ extension GitHubApi {
      
      return URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
       // Позволит улучшить перформанс так как UIKit лучше адаптирует время для отрисовки рендеринга и тд
-      RunLoop.main.perform(inModes: [.common]) {
+//      RunLoop.main.perform(inModes: [.common]) {
         completion(data,response, error)
-      }
+//      }
 //       DispatchQueue.main.async {
 //
 //       }

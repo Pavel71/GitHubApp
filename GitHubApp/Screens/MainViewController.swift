@@ -28,6 +28,8 @@ class MainViewController: UIViewController {
   
   private lazy var tableView : UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
+    
+    tableView.delegate           = self
     tableView.dataSource         = self
     tableView.prefetchDataSource = self
     tableView.showsVerticalScrollIndicator = false
@@ -81,23 +83,50 @@ class MainViewController: UIViewController {
      self.tableView.tableFooterView = createFooterSpinner()
     
     viewModel.searchUsers(filteringText: text) { (result) in
-      
-      switch result {
-      case .failure(let error):
-        self.showAlert(message: error.localizedDescription)
-        self.dismissFooterIndicator()
-      case .success(let users):
-        self.users = users
-        self.dismissFooterIndicator()
-        print("Reload Data")
-        self.tableView.reloadData()
+      RunLoop.main.perform(inModes: [.common]) {[weak self] in
+        guard let self = self else { return }
+        switch result {
+        case .failure(let error):
+          self.showAlert(message: error.localizedDescription)
+          self.dismissFooterIndicator()
+        case .success(let users):
+          self.users = users
+          self.dismissFooterIndicator()
+          print("Reload Data")
+          // вот здесь можно попробовать оптимизировать обновление таблицы!
+          self.tableView.reloadData()
+        }
+        
       }
     }
     
    
   }
-  
   let imageCache = NSCache<NSString, UIImage>()
+  // MARK: Load Avatar Image
+  private func loadAvatarImage(url: URL,indexPath: IndexPath) {
+    
+    viewModel.loadAvatarImage(url: url, indexPath: indexPath) {[url,indexPath] (image) in
+      
+      RunLoop.main.perform(inModes: [.common]) {[weak self] in
+        
+        guard let self = self else { return }
+        guard
+          let cell = self.tableView.cellForRow(at: indexPath)
+            as? UserListCell
+          else {return}
+        
+        // Сохраним в кешик
+        self.imageCache.setObject(image!, forKey: url.absoluteString as NSString)
+        // Обновим ячеечку
+        cell.updateImageViewWhenLoaded(image)
+        
+      }
+    }
+    
+  }
+  
+  
 }
 
 // MARK: - TableView Configure
@@ -117,7 +146,7 @@ extension MainViewController {
 
 }
 
-// MARK: - TableView Delegate and DataSource
+// MARK: - TableView  DataSource
 
 extension MainViewController: UITableViewDataSource {
   
@@ -128,8 +157,8 @@ extension MainViewController: UITableViewDataSource {
     cell.configure(viewModel: user)
     
     if let imageFromCache = imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) {
-        print("ИЗ кешика")
-      cell.updateImageFromCahce(imageFromCache)
+      
+      cell.setImageToAvatarImageView(imageFromCache)
         
     } else {
       loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
@@ -138,35 +167,6 @@ extension MainViewController: UITableViewDataSource {
     cell.configure(viewModel: user)
 
     return cell
-  }
-  
-  
-  // Нужно сделать загрузку + кеш! проверяем кешик! Если там есть то заибарем если нет тогрузим и сохраняем в кешик
-  
-  private func loadAvatarImage(url: URL,indexPath: IndexPath) {
-  
-    let downloadOp = AvatarImagesLoadedOperation(imageUrl: url)
-    
-    downloadOp.didLoadedImage = {[weak self,url] image in
-      // Проверка что это наша ячееяка
-      DispatchQueue.main.async {
-        guard
-          let cell = self?.tableView.cellForRow(at: indexPath)
-            as? UserListCell
-          else {return}
-        
-        // Сохраним в кешик
-        self?.imageCache.setObject(image!, forKey: url.absoluteString as NSString)
-        // Обновим ячеечку
-        cell.updateImageViewWithImage(image)
-//        self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-        // Здесь операция нам не нужна уже
-        AvatarImagesLoadedOperation.downloadsInProgress[indexPath] = nil
-      }
-    }
-    
-    AvatarImagesLoadedOperation.downloadQueue.addOperation (downloadOp)
-    AvatarImagesLoadedOperation.downloadsInProgress[indexPath] = downloadOp
   }
 
   
@@ -177,6 +177,19 @@ extension MainViewController: UITableViewDataSource {
   
   
   
+}
+
+// MARK: - TableView  Delegate
+
+extension MainViewController: UITableViewDelegate {
+    // MARK: Cancel Avatar Loaded
+   func tableView(_ tableView: UITableView,didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
+    if let operation = viewModel.avatarLoadedInProgress[indexPath] {
+      print("Cancel Operation")
+        operation.cancel()
+    }
+  }
 }
 // MARK: - Navigation
 extension MainViewController {
@@ -272,9 +285,10 @@ extension MainViewController :  UISearchBarDelegate{
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
+    imageCache.removeAllObjects()
     // Нужно скинуть старые операции
-    AvatarImagesLoadedOperation.cancelAllOperations()
-    
+    viewModel.cancelAllAvatarDownLoadOperations()
+    viewModel.cancelSearchingUsersOperation() // так как юзер будет вводить новые данные
 
     viewModel.currentUserString = searchText
     viewModel.dropPagging()

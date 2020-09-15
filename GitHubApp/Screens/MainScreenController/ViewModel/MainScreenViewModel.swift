@@ -6,7 +6,7 @@
 //  Copyright © 2020 Павел Мишагин. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 
 // Класс отвечает за взаимодействие Сетевого слоя и ViewController
@@ -23,16 +23,29 @@ final class MainScreenViewModel {
   private var pagging       : Int    = 20
   private var totalCount    : Int    = 0
   
-//  var isLoadingData          = false
+
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var currentUserString      = ""
   
-  // Operations
+  //MARK: - Search Operation
   var loadQueue = OperationQueue()
   var fetchUsersOperation: FetchUsersOperation!
   
+  //MARK:  - Load AvatarImage
   
-  var loadAvatarImagesQueue = OperationQueue()
+  
+  var avatarLoadedInProgress: [IndexPath: Operation] = [:]
+  
+  var avatarDownloadQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "Avatars Download Queue"
+        return queue
+    }()
+    
+    
+  
+  
+  
   
   
   // DetailScreenViewModel
@@ -43,6 +56,21 @@ final class MainScreenViewModel {
   
   // MARK: Load Avatar Images
   
+  func loadAvatarImage(url: URL,indexPath: IndexPath, complation: @escaping ((UIImage?) -> Void) ) {
+    
+     let downloadOp = AvatarImagesLoadedOperation(imageUrl: url)
+    
+    downloadOp.didLoadedImage = { image in
+      complation(image)
+      self.avatarLoadedInProgress[indexPath] = nil
+    }
+    avatarDownloadQueue.addOperation (downloadOp)
+    avatarLoadedInProgress[indexPath] = downloadOp
+  }
+  func cancelAllAvatarDownLoadOperations() {
+      avatarDownloadQueue.cancelAllOperations()
+      avatarLoadedInProgress = [:]
+  }
   
   // MARK: - Search Users
   
@@ -73,6 +101,12 @@ final class MainScreenViewModel {
     }
   }
   
+  func cancelSearchingUsersOperation() {
+    if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
+      fetchUsersOperation.cancel()
+    }
+  }
+  
 
   // MARK: - Pagging
   func dropPagging() {
@@ -86,9 +120,7 @@ final class MainScreenViewModel {
   }
   
   func resetRequestProperty() {
-    if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
-      fetchUsersOperation.cancel()
-    }
+    
     dropPagging()
     totalCount        = 0
     currentUserString = ""

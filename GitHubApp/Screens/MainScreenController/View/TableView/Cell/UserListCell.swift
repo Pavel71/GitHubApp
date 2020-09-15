@@ -133,10 +133,10 @@ extension UserListCell {
     setNeedsUpdateConstraints()
   }
   
-  func updateImageViewWithImage(_ image: UIImage?) {
+  func updateImageViewWhenLoaded(_ image: UIImage?) {
     
         if let image = image {
-          updateImageFromCahce(image)
+          setImageToAvatarImageView(image)
             self.avatarImageView.alpha = 0
             UIView.animate(withDuration: 0.2, animations: {
                 self.avatarImageView.alpha = 1.0
@@ -148,7 +148,7 @@ extension UserListCell {
         }
     }
   
-  func updateImageFromCahce(_ image: UIImage) {
+  func setImageToAvatarImageView(_ image: UIImage) {
     self.avatarImageView.image = image.resizeImage(100, opaque: true)
     self.avatarImageView.roundCornersForAspectFit(radius: 15)
     
