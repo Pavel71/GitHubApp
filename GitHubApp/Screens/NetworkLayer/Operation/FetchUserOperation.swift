@@ -10,38 +10,40 @@ import UIKit
 
 // Моя задача написать операцию которая будет загружать юзеров! Еп макарек! тоесть это одноразоваое дело но с возможностью отмены!
 
+// Вообще Opearations должны быть во ViewModel - Это я буду реализовывать завтра + будет реализация загрузки картинок через operation + кеш + cancel если быстро пролистываем
 
+// Также завтра мне нужно будет реализовать загрузку данных для detail screen
+// + анимированные placeholders пока идет загрузкаКуыы
 
 
 class FetchUsersOperation : AsyncOperation {
   
   // Input
-  var userName : String = ""
-  var pages    : Int    = 15
+  var userName : String  
+  var pages    : Int
+  
   
   // Output
-  var users: [GitHubUser] = []
+  var didLoadedResult : ((Result<UsersSearchResult,GitHubApiError>) -> Void)?
+  
+   init(userName: String,pages: Int) {
+    self.userName = userName
+    self.pages    = pages
+    super.init()
+  }
   
   
   override func main() {
+    
+    
     // 1
-       if isCancelled { return }
+    if isCancelled  { return }
+    
     GitHubApi.shared.searchUsers(userName: userName, pages: pages) { (result) in
       // 2
-      if self.isCancelled { return }
+      if  self.isCancelled { return }
       
-      switch result {
-      case .failure(let error):
-        print("Fetch Error",error)
-        
-      case .success(let userSearchRes):
-        
-        DispatchQueue.main.async {
-          self.users = userSearchRes.users
-          self.state = .finished
-        }
-        
-      }
+      self.didLoadedResult!(result)
     }
     
   }

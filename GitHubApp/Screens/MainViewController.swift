@@ -28,8 +28,9 @@ class MainViewController: UIViewController {
   
   private lazy var tableView : UITableView = {
     let tableView = UITableView(frame: .zero, style: .plain)
-    tableView.dataSource = self
-    tableView.delegate   = self
+    tableView.dataSource         = self
+    tableView.prefetchDataSource = self
+    tableView.showsVerticalScrollIndicator = false
     return tableView
   }()
   
@@ -38,6 +39,8 @@ class MainViewController: UIViewController {
   // MARK: ViewModel
   
   var viewModel = MainScreenViewModel()
+  private var operations: [IndexPath: Operation] = [:]
+  private let queue = OperationQueue()
   
   // MARK: App State
   
@@ -45,16 +48,7 @@ class MainViewController: UIViewController {
   
   // MARK: DataSource
   
-  var users : [GitHubUser] = [] {
-    didSet {
-//      DispatchQueue.main.async {
-    
-      self.tableView.reloadData()
-        
-//      }
-      
-    }
-  }
+  var users : [GitHubUser] = []
   
   // MARK: - Lyfe Cycle
   override func viewDidLoad() {
@@ -66,49 +60,44 @@ class MainViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
     searchController.searchBar.delegate        = self
-//    searchController.searchResultsUpdater      = self
     navigationItem.searchController            = searchController
     navigationItem.hidesSearchBarWhenScrolling = false
   }
   
   
-  // MARK: - Fetch USers
   
-  @objc func searchUsers() {
+  // MARK: Fetch By Operation
+  
+  @objc private  func searchUsersByOperation() {
+   
     
-   print("Search USers")
     let text = viewModel.currentUserString
-    
     guard text.isEmpty == false else {return}
     
-    self.tableView.tableFooterView = createFooterSpinner()
+    print("Fetch Data")
     
-     viewModel.searchUsers(filteringText: text) {[weak self] result in
+     self.tableView.tableFooterView = createFooterSpinner()
+    
+    viewModel.searchUsers(filteringText: text) { (result) in
       
-      self?.viewModel.isLoadingData = false
-      
-      DispatchQueue.main.async {
-        self?.dismissFooterIndicator()
+      switch result {
+      case .failure(let error):
+        self.showAlert(message: error.localizedDescription)
+        self.dismissFooterIndicator()
+      case .success(let users):
+        self.users = users
+        self.dismissFooterIndicator()
+        print("Reload Data")
+        self.tableView.reloadData()
       }
-      
-        switch result {
-        case .success(let users):
-          self?.users = users
-        case .failure(let error):
-          print(error.localizedDescription)
-          DispatchQueue.main.async {
-            self?.showAlert(message: error.localizedDescription)
-            self?.dismissFooterIndicator()
-          }
-          
-        }
-      }
-   }
+    }
+    
+   
+  }
   
-
-  
-  
+  let imageCache = NSCache<NSString, UIImage>()
 }
 
 // MARK: - TableView Configure
@@ -134,9 +123,50 @@ extension MainViewController: UITableViewDataSource {
   
    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: UserListCell.cellId, for: indexPath) as! UserListCell
-    cell.configure(viewModel: users[indexPath.row])
+    
+    let user = users[indexPath.row]
+    cell.configure(viewModel: user)
+    
+    if let imageFromCache = imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) {
+        print("ИЗ кешика")
+      cell.updateImageFromCahce(imageFromCache)
+        
+    } else {
+      loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
+    }
+    
+    cell.configure(viewModel: user)
 
     return cell
+  }
+  
+  
+  // Нужно сделать загрузку + кеш! проверяем кешик! Если там есть то заибарем если нет тогрузим и сохраняем в кешик
+  
+  private func loadAvatarImage(url: URL,indexPath: IndexPath) {
+  
+    let downloadOp = AvatarImagesLoadedOperation(imageUrl: url)
+    
+    downloadOp.didLoadedImage = {[weak self,url] image in
+      // Проверка что это наша ячееяка
+      DispatchQueue.main.async {
+        guard
+          let cell = self?.tableView.cellForRow(at: indexPath)
+            as? UserListCell
+          else {return}
+        
+        // Сохраним в кешик
+        self?.imageCache.setObject(image!, forKey: url.absoluteString as NSString)
+        // Обновим ячеечку
+        cell.updateImageViewWithImage(image)
+//        self?.tableView.reloadRows(at: [indexPath], with: .automatic)
+        // Здесь операция нам не нужна уже
+        AvatarImagesLoadedOperation.downloadsInProgress[indexPath] = nil
+      }
+    }
+    
+    AvatarImagesLoadedOperation.downloadQueue.addOperation (downloadOp)
+    AvatarImagesLoadedOperation.downloadsInProgress[indexPath] = downloadOp
   }
 
   
@@ -197,21 +227,32 @@ extension MainViewController {
     tableView.tableFooterView = nil
   }
 }
-// MARK: Scroll to Last Cell
-extension MainViewController: UITableViewDelegate {
-  
-   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    
-    let position       = scrollView.contentOffset.y
-    let scrollViewLastCell = (tableView.contentSize.height + 30) - scrollView.frame.size.height
-    
-    guard let text = searchController.searchBar.text else {return}
 
-    if position > scrollViewLastCell && viewModel.isLoadingData == false && text.isEmpty == false {
-      viewModel.isLoadingData     = true
-      viewModel.currentUserString = text
-      
-      searchUsers()
+
+// MARK: - Prefetcing Api
+private extension MainViewController {
+  
+  func isLoadingCell(for indexPath: IndexPath) -> Bool {
+//    print(indexPath.row,viewModel.pagging)
+    return indexPath.row >= viewModel.getPagging() - 1
+  }
+  
+  func visibleIndexPathsToReload(intersecting indexPaths: [IndexPath]) -> [IndexPath] {
+    let indexPathsForVisibleRows = tableView.indexPathsForVisibleRows ?? []
+    let indexPathsIntersection = Set(indexPathsForVisibleRows).intersection(indexPaths)
+    return Array(indexPathsIntersection)
+  }
+}
+
+extension MainViewController: UITableViewDataSourcePrefetching {
+  
+  func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+    
+    
+    if indexPaths.contains(where: isLoadingCell) {
+      // Пора загружать данные
+      viewModel.incrementPagging()
+      searchUsersByOperation()
     }
   }
 }
@@ -227,28 +268,36 @@ extension MainViewController :  UISearchBarDelegate{
     cleanUsers()
   }
   
+  
+  
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    
+    // Нужно скинуть старые операции
+    AvatarImagesLoadedOperation.cancelAllOperations()
+    
 
     viewModel.currentUserString = searchText
     viewModel.dropPagging()
-    
+
     if searchText.isEmpty {
-      
+
       cleanUsers()
-      
+
     } else {
+
+      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.searchUsersByOperation), object: searchBar)
+      perform(#selector(self.searchUsersByOperation), with: searchBar, afterDelay: 0.75)
       
-      
-      NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.searchUsers), object: searchBar)
-      perform(#selector(self.searchUsers), with: searchBar, afterDelay: 0.75)
     }
 
   }
   
   private func cleanUsers() {
-   
+
+    dismissFooterIndicator()
     viewModel.resetRequestProperty()
     self.users.removeAll()
+    
     tableView.reloadData()
   }
  

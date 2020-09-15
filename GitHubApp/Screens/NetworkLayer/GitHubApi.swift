@@ -38,7 +38,7 @@ enum GitHubApiError: Error, LocalizedError, Identifiable {
         case .userDetailsError:
           return "Ошибка при загрузке данных по пользователю"
         case .paggingError:
-          return "Больше пользователей не загрузить"
+          return "Больше пользователей не загрузить. Требование GitHubApi."
         }
       
     }

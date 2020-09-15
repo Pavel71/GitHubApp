@@ -18,16 +18,22 @@ final class MainScreenViewModel {
   
   
   // MainScreenPropertys
-  var users   : [GitHubUser] = [] {
-    didSet {wasUsersCount = users.count}
-  }
-  var wasUsersCount : Int    = 0
-  var pagging       : Int    = 0
-  var totalCount    : Int    = 0
+  var users   : [GitHubUser] = []
+
+  private var pagging       : Int    = 20
+  private var totalCount    : Int    = 0
   
-  var isLoadingData          = false
+//  var isLoadingData          = false
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var currentUserString      = ""
+  
+  // Operations
+  var loadQueue = OperationQueue()
+  var fetchUsersOperation: FetchUsersOperation!
+  
+  
+  var loadAvatarImagesQueue = OperationQueue()
+  
   
   // DetailScreenViewModel
   
@@ -35,43 +41,54 @@ final class MainScreenViewModel {
   
 
   
+  // MARK: Load Avatar Images
+  
+  
   // MARK: - Search Users
   
   func searchUsers(filteringText: String,complatition: @escaping (Result<[GitHubUser],GitHubApiError>) -> Void) {
     
-    if (pagging < totalCount && pagging < 100) || pagging == 0 {
-      
-      incrementPagging()
-      gitHubApi.searchUsers(userName: filteringText, pages: pagging) { result in
-        
-        switch result {
-        case .success(let userSearchResult):
-          self.users      = userSearchResult.users
-          self.totalCount = userSearchResult.totalCount
-          
-          complatition(.success(userSearchResult.users))
-        case .failure(let error):
-          complatition(.failure(error))
-        }
-        
-        
-      }
-    } else {
-      complatition(.failure(.paggingError))
+    if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
+      fetchUsersOperation.cancel()
     }
     
+    // Нельзя загружать больше 100 из за требований APi
+    guard (pagging <= 100) else {
+      return
+        complatition(.failure(.paggingError))
+    }
     
+    fetchUsersOperation = FetchUsersOperation(userName: filteringText, pages: pagging)
+    loadQueue.addOperation(fetchUsersOperation)
+    
+    fetchUsersOperation.didLoadedResult = {[weak self] result in
+      
+      switch  result {
+      case .failure(let error):
+        complatition(.failure(error))
+      case .success(let userUpdateResult):
+        self?.totalCount = userUpdateResult.totalCount
+        complatition(.success(userUpdateResult.users))
+      }
+    }
   }
+  
 
   // MARK: - Pagging
   func dropPagging() {
-    pagging = 0
+    pagging = 20
   }
   func incrementPagging() {
-    pagging += 15
+    pagging += 20
+  }
+  func getPagging() -> Int {
+    return pagging
   }
   
   func resetRequestProperty() {
+    if fetchUsersOperation != nil { // Отменяем старую операцию если она есть
+      fetchUsersOperation.cancel()
+    }
     dropPagging()
     totalCount        = 0
     currentUserString = ""
@@ -82,6 +99,7 @@ final class MainScreenViewModel {
 // MARK: - Get DetailViewModel
 extension MainScreenViewModel {
   
+  // СЮда нужно просто юзера передавать и все
   
   func getDetailViewModel(indexPath: IndexPath,completion: @escaping (Result<DetailScreenViewModel,GitHubApiError>) -> Void) {
     
