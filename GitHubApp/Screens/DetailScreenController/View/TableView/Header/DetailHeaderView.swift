@@ -99,48 +99,52 @@ class DetailHeaderView: UIView {
   
   private lazy var nameHStack : UIStackView = {
     
-    let vStack = UIStackView(arrangedSubviews: [nameLabel])
-    vStack.distribution = .fill
-    vStack.alignment    = .fill
-    vStack.axis         = .vertical
+//    let vStack = UIStackView(arrangedSubviews: [nameLabel])
+//    vStack.distribution = .fill
+//    vStack.alignment    = .fill
+//    vStack.axis         = .vertical
     nameLabel.numberOfLines = 0
+    nameLabel.lineBreakMode = .byWordWrapping
     
-    let stackView = UIStackView(arrangedSubviews: [nameTitleLabel,vStack])
+    let stackView = UIStackView(arrangedSubviews: [nameTitleLabel,nameLabel])
     stackView.alignment = .top
     stackView.axis      = .horizontal
     stackView.alignment = .firstBaseline
+    stackView.spacing   = 5
     stackView.translatesAutoresizingMaskIntoConstraints = false
     return stackView
   }()
   
   private lazy var locationHStack : UIStackView = {
     
-    let vStack = UIStackView(arrangedSubviews: [locationLabel])
-    vStack.distribution = .fill
-    vStack.alignment    = .fill
-    vStack.axis         = .vertical
+//    let vStack = UIStackView(arrangedSubviews: [locationLabel])
+//    vStack.distribution = .fill
+//    vStack.alignment    = .fill
+//    vStack.axis         = .vertical
     locationLabel.numberOfLines = 0
     locationLabel.lineBreakMode = .byCharWrapping
     
-    let stackView = UIStackView(arrangedSubviews: [locationTitleLabel,vStack])
+    let stackView = UIStackView(arrangedSubviews: [locationTitleLabel,locationLabel])
     stackView.axis      = .horizontal
     stackView.alignment = .firstBaseline
+    stackView.spacing   = 5
     stackView.translatesAutoresizingMaskIntoConstraints = false
     return stackView
   }()
   
   private lazy var createdHStack : UIStackView = {
      
-     let vStack = UIStackView(arrangedSubviews: [createdLabel])
-     vStack.distribution = .fill
-     vStack.alignment    = .fill
-     vStack.axis         = .vertical
+//     let vStack = UIStackView(arrangedSubviews: [createdLabel])
+//     vStack.distribution = .fill
+//     vStack.alignment    = .fill
+//     vStack.axis         = .vertical
      createdLabel.numberOfLines = 0
      createdLabel.lineBreakMode = .byCharWrapping
      
-     let stackView = UIStackView(arrangedSubviews: [createdTitleLabel,vStack])
+     let stackView = UIStackView(arrangedSubviews: [createdTitleLabel,createdLabel])
      stackView.axis      = .horizontal
      stackView.alignment = .firstBaseline
+     stackView.spacing   = 5
      stackView.translatesAutoresizingMaskIntoConstraints = false
      return stackView
    }()
@@ -157,7 +161,21 @@ class DetailHeaderView: UIView {
     
     addSubViews()
     
+    setPriorites()
+  }
+  
+  private func setPriorites() {
+    //  Title зафиксирвоали свой размер и больше не сжимаются и не растутт
+  
+    [nameTitleLabel,loginTitleLabel,locationTitleLabel,createdTitleLabel].forEach{
+      
+      $0.setContentHuggingPriority(.required, for: .horizontal)
+      $0.setContentCompressionResistancePriority(.required, for: .horizontal)
+    }
     
+    // Имя должно занять все место какое есть если что
+    nameLabel.setContentHuggingPriority(.required, for: .vertical)
+    nameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
   }
   
   private func addSubViews() {
@@ -166,12 +184,7 @@ class DetailHeaderView: UIView {
     
     avatarImageView.constrainWidth(constant: height * 0.5)
     avatarImageView.constrainHeight(constant: height * 0.5)
-    
-    nameTitleLabel.constrainWidth(constant: 60)
-    loginTitleLabel.constrainWidth(constant: 60)
-    
-    locationTitleLabel.constrainWidth(constant: 90)
-    createdTitleLabel.constrainWidth(constant: 90)
+
   }
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
