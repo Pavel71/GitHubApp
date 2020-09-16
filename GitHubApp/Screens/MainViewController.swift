@@ -174,7 +174,7 @@ extension MainViewController: UITableViewDataSource {
     
     // Если есть в кеше то достаем оттуда
     if let imageFromCache = imageCash.getImage(key: user.avatarUrl.absoluteString) {
-      print("из кешика")
+      
       cell.setImageToAvatarImageView(imageFromCache)
 
     }
