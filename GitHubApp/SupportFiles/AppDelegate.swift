@@ -33,6 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let locator = ServiceLocator.shared
     locator.addService(service: GitHubApi.shared)
     locator.addService(service: AppState.shared)
+    locator.addService(service: ImageCachWorker.shared)
     
   }
 

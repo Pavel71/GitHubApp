@@ -17,20 +17,17 @@ final class DetailScreenViewModel {
   var repos             : [Repository] = []
   var error             : GitHubApiError?
   
-//  var userUrl   : URL
-//  var reposUrl  : URL
+
   var userName  : String
   let gitHubApi : GitHubApi! = ServiceLocator.shared.getService()
   var dispatchGroup = DispatchGroup()
   
   init(userName: String) {
     self.userName = userName
-//    self.userUrl  = userUrl
-//    self.reposUrl = reposUrl
   }
   
   // MARK: - Fetch Detail Screen Model
-  func fetchDetailScreenData(complatition: @escaping (Result<Bool,GitHubApiError>) -> Void) {
+  func fetchDetailScreenData(complatition: @escaping (Result<DetailScreenModel,GitHubApiError>) -> Void) {
     
 
     dispatchGroup.enter()
@@ -80,8 +77,8 @@ final class DetailScreenViewModel {
         } else {
           
           let detailScreenModel = DetailScreenModel(details: self.detailModel, repos: self.repos)
-          self.detailScreenModel = detailScreenModel
-          complatition(.success(true))
+          
+          complatition(.success(detailScreenModel))
           
         }
       }

@@ -44,8 +44,8 @@ class UserListCell: UITableViewCell {
     let iv = UIImageView()
     iv.contentMode = .scaleAspectFit
     iv.backgroundColor = .lightGray
-    iv.clipsToBounds = true
-    iv.layer.cornerRadius = 15
+//    iv.clipsToBounds = true
+//    iv.layer.cornerRadius = 15
     iv.translatesAutoresizingMaskIntoConstraints = false
     return iv
   }()
@@ -136,7 +136,7 @@ extension UserListCell {
         if let image = image {
           setImageToAvatarImageView(image)
             self.avatarImageView.alpha = 0
-            UIView.animate(withDuration: 0.8, animations: {
+            UIView.animate(withDuration: 0.4, animations: {
                 self.avatarImageView.alpha = 1.0
             })
             
@@ -147,7 +147,7 @@ extension UserListCell {
   
   func setImageToAvatarImageView(_ image: UIImage) {
     self.avatarImageView.image = image
-    self.avatarImageView.roundCornersForAspectFit(radius: 15)
+//    self.avatarImageView.roundCornersForAspectFit(radius: 15) // Better Perfomance
     
   }
   

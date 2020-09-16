@@ -34,14 +34,8 @@ class MainViewController: UIViewController {
     tableView.prefetchDataSource = self
     tableView.showsVerticalScrollIndicator = false
     tableView.register(UserListCell.self, forCellReuseIdentifier: UserListCell.cellId)
-//    tableView.register(UserListCellFrame.self, forCellReuseIdentifier: UserListCellFrame.cellId)
-    
-//    tableView.rowHeight = UITableView.automaticDimension
-//    tableView.estimatedRowHeight = 100
     return tableView
   }()
-  
-//  let loadingActivityIndicator = LoadingActivityIndicator(frame: .init(x: 0, y: 0, width: 150, height: 100))
   
   // MARK: ViewModel
   
@@ -49,9 +43,9 @@ class MainViewController: UIViewController {
   private var operations: [IndexPath: Operation] = [:]
   private let queue = OperationQueue()
   
-  // MARK: App State
+  // MARK: Workers
   
-  let appState: AppState! = ServiceLocator.shared.getService()
+  let imageCash: ImageCachWorker! = ServiceLocator.shared.getService()
   
   // MARK: DataSource
   
@@ -139,7 +133,8 @@ class MainViewController: UIViewController {
   
   
   
-  let imageCache = NSCache<NSString, UIImage>()
+  
+  
   // MARK: Load Avatar Image
   private func loadAvatarImage(url: URL,indexPath: IndexPath) {
     
@@ -154,7 +149,7 @@ class MainViewController: UIViewController {
           else {return}
         
         // Сохраним в кешик
-        self.imageCache.setObject(image!, forKey: url.absoluteString as NSString)
+        self.imageCash.setImage(image: image!, key: url.absoluteString)
         // Обновим ячеечку
         cell.updateImageViewWhenLoaded(image)
         
@@ -178,14 +173,16 @@ extension MainViewController: UITableViewDataSource {
     cell.configure(viewModel: user)
     
     // Если есть в кеше то достаем оттуда
-    if let imageFromCache = imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) {
-
+    if let imageFromCache = imageCash.getImage(key: user.avatarUrl.absoluteString) {
+      print("из кешика")
       cell.setImageToAvatarImageView(imageFromCache)
 
     }
     
     return cell
   }
+  
+   
 
   
   
@@ -217,17 +214,11 @@ extension MainViewController: UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     
-    
-//     ANimate Cell
-//    let animation = AnimationFactory.makeFadeAnimation(duration: 0.5, delayFactor: 0)
-//    let animator = Animator(animation: animation)
-//    animator.animate(cell: cell, at: indexPath, in: tableView)
-    
     let user = users[indexPath.row]
     
     // в кеше нет картинки
      if imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) == nil {
-      print("Load Ava WIll Display",indexPath)
+//      print("Load Ava WIll Display",indexPath)
       loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
        }
     
@@ -235,27 +226,25 @@ extension MainViewController: UITableViewDelegate {
   
 
 }
-// MARK: - Navigation
+// MARK: - Route
 extension MainViewController {
   
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    print(indexPath,"Selected \(self.users[indexPath.row].username)")
+    tableView.deselectRow(at: indexPath, animated: true)
+//    print(indexPath,"Selected \(self.users[indexPath.row].username)")
+    
+    let userName        = self.users[indexPath.row].username
+    routToDetailViewCOntroller(userName: userName)
+    
 
-//    viewModel.getDetailViewModel(indexPath: indexPath) {[weak self] result in
-//
-//      switch result {
-//      case .failure(let error):
-//        self?.showAlert(message: error.localizedDescription)
-//      case .success(let detailViewModel):
-//
-//        let detailViewController = DetailsViewController(detailViewModel:detailViewModel)
-//
-//        self?.navigationController?.pushViewController(detailViewController, animated: true)
-//      }
-//
-//
-//    }
+  }
+  
+  
+  private func routToDetailViewCOntroller(userName: String ) {
+    let detailViewModel = DetailScreenViewModel(userName: userName)
+    let detailVC        = DetailsViewController(detailViewModel: detailViewModel)
+    self.navigationController?.pushViewController(detailVC, animated: true)
   }
 }
 

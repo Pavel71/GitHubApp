@@ -145,6 +145,7 @@ extension UIView {
     l.text          = text
     l.textAlignment = .left
     l.sizeToFit()
+    l.translatesAutoresizingMaskIntoConstraints = false
     return l
   }
   

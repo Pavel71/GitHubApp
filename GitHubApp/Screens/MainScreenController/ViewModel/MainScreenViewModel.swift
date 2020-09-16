@@ -51,7 +51,7 @@ final class MainScreenViewModel {
   
   // DetailScreenViewModel
   
-  private var detailScreenViewModel : DetailScreenViewModel!
+//  private var detailScreenViewModel : DetailScreenViewModel!
   
 
   
@@ -132,27 +132,27 @@ final class MainScreenViewModel {
 }
 
 // MARK: - Get DetailViewModel
-extension MainScreenViewModel {
-  
-  // СЮда нужно просто юзера передавать и все
-  
-  func getDetailViewModel(indexPath: IndexPath,completion: @escaping (Result<DetailScreenViewModel,GitHubApiError>) -> Void) {
-    
-    let user = users[indexPath.row]
-       
-    detailScreenViewModel = DetailScreenViewModel(userName: user.username)
-       
-       detailScreenViewModel.fetchDetailScreenData {(result) in
-        
-         switch result {
-         case .failure(let error):
-          completion(.failure(error))
-          
-         case .success(_):
-          completion(.success(self.detailScreenViewModel))
-
-         }
-         
-       }
-  }
-}
+//extension MainScreenViewModel {
+//
+//  // СЮда нужно просто юзера передавать и все
+//
+//  func getDetailViewModel(indexPath: IndexPath,completion: @escaping (Result<DetailScreenViewModel,GitHubApiError>) -> Void) {
+//
+//    let user = users[indexPath.row]
+//
+//    detailScreenViewModel = DetailScreenViewModel(userName: user.username)
+//
+//       detailScreenViewModel.fetchDetailScreenData {(result) in
+//
+//         switch result {
+//         case .failure(let error):
+//          completion(.failure(error))
+//
+//         case .success(_):
+//          completion(.success(self.detailScreenViewModel))
+//
+//         }
+//
+//       }
+//  }
+//}

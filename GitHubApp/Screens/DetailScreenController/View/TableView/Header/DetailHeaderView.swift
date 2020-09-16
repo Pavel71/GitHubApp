@@ -18,11 +18,19 @@ protocol DetailHeaderViewable {
 
 class DetailHeaderView: UIView {
   
+  // MARK: Workers
+  
+  let imageCache : ImageCachWorker! = ServiceLocator.shared.getService()
+  
   // MARK: - Views
   
-  private var avatarImageView: AsyncLoadedImageView = {
-    let iv = AsyncLoadedImageView(image: #imageLiteral(resourceName: "avatarPlaceholder"))
-    iv.contentMode        = .scaleAspectFit
+  private var avatarImageView: UIImageView = {
+    let iv = UIImageView()
+    iv.backgroundColor = .lightGray
+    iv.contentMode     = .scaleAspectFit
+    iv.translatesAutoresizingMaskIntoConstraints = false
+//    iv.clipsToBounds = true
+//    iv.layer.cornerRadius = 15
     return iv
   }()
   // Name
@@ -41,14 +49,7 @@ class DetailHeaderView: UIView {
   private lazy var locationTitleLabel     = createSimpleLabel(font: .systemFont(ofSize: 20),text: "Location:")
   private lazy var locationLabel: UILabel = createSimpleLabel(font: .systemFont(ofSize: 18))
   
-//  func createSimpleLabel(font: UIFont,text:String? = nil) -> UILabel {
-//    let l = UILabel()
-//    l.font          = font
-//    l.text          = text
-//    l.textAlignment = .left
-//    l.sizeToFit()
-//    return l
-//  }
+
   
   // MARK: - Stacks
   
@@ -57,6 +58,8 @@ class DetailHeaderView: UIView {
         stack.axis         = .vertical
         stack.distribution = .fill
         stack.spacing      = 10
+    
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
   
@@ -104,6 +107,25 @@ class DetailHeaderView: UIView {
   private lazy var createdHStack  = createSimpleHStack(view1: createdTitleLabel, view2: createdLabel)
 
   private lazy var loginHStack    = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel)
+  
+  
+  
+  // MARK: Constraints
+  
+  private var staticConstraints :[NSLayoutConstraint] {
+    [
+      stack.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+      stack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+      stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+      stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 10),
+      avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+      avatarImageView.heightAnchor.constraint(equalToConstant: 100),
+      locationTitleLabel.widthAnchor.constraint(equalToConstant: 100),
+      createdTitleLabel.widthAnchor.constraint(equalToConstant: 100),
+      nameTitleLabel.widthAnchor.constraint(equalToConstant: 60),
+      loginTitleLabel.widthAnchor.constraint(equalToConstant: 60)
+    ]
+  }
 
   
   
@@ -120,6 +142,16 @@ class DetailHeaderView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  override func updateConstraints() {
+    
+    NSLayoutConstraint.activate(
+    staticConstraints
+    )
+    
+    
+    super.updateConstraints()
+  }
+  
 }
 
 // MARK: - Set Views
@@ -128,19 +160,19 @@ extension DetailHeaderView {
   func setViews() {
     
     addSubview(stack)
-    stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
-    
-    avatarImageView.constrainWidth(constant: 100)
-    avatarImageView.constrainHeight(constant: 100)
-    
-    
-    [locationTitleLabel,createdTitleLabel] .forEach { (label) in
-      label.constrainWidth(constant: 100)
-    }
-    
-    [nameTitleLabel,loginTitleLabel] .forEach { (label) in
-      label.constrainWidth(constant: 60)
-    }
+//    stack.fillSuperview(padding: .init(top: 10, left: 10, bottom: 10, right: 10))
+//
+//    avatarImageView.constrainWidth(constant: 100)
+//    avatarImageView.constrainHeight(constant: 100)
+//
+//
+//    [locationTitleLabel,createdTitleLabel] .forEach { (label) in
+//      label.constrainWidth(constant: 100)
+//    }
+//
+//    [nameTitleLabel,loginTitleLabel] .forEach { (label) in
+//      label.constrainWidth(constant: 60)
+//    }
     
 
   }
@@ -153,9 +185,7 @@ extension DetailHeaderView {
   
   func configure(viewModel:DetailHeaderViewable) {
     
-    avatarImageView.loadImageUsingUrl(url: viewModel.avatarUrl) { (_) in
-          self.avatarImageView.roundCornersForAspectFit(radius: 15)
-    }
+    avatarImageView.image = imageCache.getImage(key: viewModel.avatarUrl.absoluteString)
     
     nameLabel.text     = viewModel.name     ?? "--//--"
     loginLabel.text    = viewModel.login
@@ -163,8 +193,9 @@ extension DetailHeaderView {
     
     createdLabel.text  = changeDateFormatt(date: viewModel.createdAt)
 
-    
+    setNeedsUpdateConstraints()
   }
+  
   
   
 
