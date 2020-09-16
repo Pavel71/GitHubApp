@@ -17,6 +17,8 @@
 		051BC73E24F640C60066B100 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 051BC73D24F640C60066B100 /* AppState.swift */; };
 		05215E3C2510AFCF00F02ED7 /* AvatarImagesLoadedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05215E3B2510AFCF00F02ED7 /* AvatarImagesLoadedOperation.swift */; };
 		05269736251206F500A79092 /* ImageCash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05269735251206F500A79092 /* ImageCash.swift */; };
+		0526973825123F7300A79092 /* UILayoutPriorety+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0526973725123F7300A79092 /* UILayoutPriorety+ Extension.swift */; };
+		0526973A2512407F00A79092 /* DetailHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 052697392512407F00A79092 /* DetailHeaderView.xib */; };
 		053A37AE250FC89800ED0723 /* FetchUserOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053A37AD250FC89800ED0723 /* FetchUserOperation.swift */; };
 		053A37B0250FC93300ED0723 /* AsyncOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053A37AF250FC93300ED0723 /* AsyncOperation.swift */; };
 		0547A95924F3E1C400393BB4 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0547A95824F3E1C400393BB4 /* MainViewController.swift */; };
@@ -53,6 +55,8 @@
 		051BC73D24F640C60066B100 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		05215E3B2510AFCF00F02ED7 /* AvatarImagesLoadedOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarImagesLoadedOperation.swift; sourceTree = "<group>"; };
 		05269735251206F500A79092 /* ImageCash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCash.swift; sourceTree = "<group>"; };
+		0526973725123F7300A79092 /* UILayoutPriorety+ Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILayoutPriorety+ Extension.swift"; sourceTree = "<group>"; };
+		052697392512407F00A79092 /* DetailHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailHeaderView.xib; sourceTree = "<group>"; };
 		053A37AD250FC89800ED0723 /* FetchUserOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchUserOperation.swift; sourceTree = "<group>"; };
 		053A37AF250FC93300ED0723 /* AsyncOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncOperation.swift; sourceTree = "<group>"; };
 		0547A95824F3E1C400393BB4 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = ../../MainViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 			isa = PBXGroup;
 			children = (
 				051BC73924F553520066B100 /* DetailHeaderView.swift */,
+				052697392512407F00A79092 /* DetailHeaderView.xib */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -273,6 +278,7 @@
 				058A759C24F41AF40053D361 /* UIImageView+Extension.swift */,
 				058A75A424F4627D0053D361 /* UIImage+Extensions.swift */,
 				051BC73024F51E970066B100 /* DispatchQue+Extension.swift */,
+				0526973725123F7300A79092 /* UILayoutPriorety+ Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -424,6 +430,7 @@
 			files = (
 				057886A924F3CF7300CA14CF /* README.md in Resources */,
 				058A759424F3FBC00053D361 /* MainScreenTasks in Resources */,
+				0526973A2512407F00A79092 /* DetailHeaderView.xib in Resources */,
 				057886AB24F3CFA800CA14CF /* Tasks.txt in Resources */,
 				057886A024F3CEE700CA14CF /* LaunchScreen.storyboard in Resources */,
 				058A75AC24F4FB930053D361 /* DetailTasks.txt in Resources */,
@@ -448,6 +455,7 @@
 				053A37AE250FC89800ED0723 /* FetchUserOperation.swift in Sources */,
 				0578869824F3CEE200CA14CF /* ViewController.swift in Sources */,
 				051BC73324F534FD0066B100 /* LoadingActivityIndicator.swift in Sources */,
+				0526973825123F7300A79092 /* UILayoutPriorety+ Extension.swift in Sources */,
 				058A75A324F456FB0053D361 /* AsyncLoadedImageView.swift in Sources */,
 				058A75B024F509200053D361 /* DetailScreenModel.swift in Sources */,
 				0513C39024F3ED9A00991B55 /* Repository.swift in Sources */,

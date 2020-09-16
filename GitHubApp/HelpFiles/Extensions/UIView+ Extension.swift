@@ -122,12 +122,12 @@ struct AnchoredConstraints {
 
 // MARK: - Stack
 extension UIView {
-  func createSimpleHStack(view1: UIView,view2: UIView) -> UIStackView {
+  func createSimpleHStack(view1: UIView,view2: UIView,aligment:UIStackView.Alignment = .fill) -> UIStackView {
     let hStack = UIStackView(arrangedSubviews: [view1,view2])
     hStack.distribution  = .fill
     hStack.axis          = .horizontal
     hStack.spacing       = 5
-    hStack.alignment     = .fill
+    hStack.alignment     = aligment
     return hStack
   }
   

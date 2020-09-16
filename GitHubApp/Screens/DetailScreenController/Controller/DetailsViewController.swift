@@ -6,6 +6,8 @@
 //  Copyright © 2020 Павел Мишагин. All rights reserved.
 //
 
+
+
 import UIKit
 
 
@@ -31,7 +33,6 @@ class DetailsViewController : UIViewController {
     tableView.estimatedRowHeight = UITableView.automaticDimension
     tableView.allowsSelection = false
     
-    tableView.tableHeaderView = headerView
     return tableView
   }()
   
@@ -76,6 +77,8 @@ class DetailsViewController : UIViewController {
   private func addTableView() {
     view.addSubview(tableView)
     tableView.fillSuperview()
+    
+    tableView.tableHeaderView = headerView
   }
   
 
