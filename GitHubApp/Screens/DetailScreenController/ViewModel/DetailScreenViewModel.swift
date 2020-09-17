@@ -30,58 +30,58 @@ final class DetailScreenViewModel {
   func fetchDetailScreenData(complatition: @escaping (Result<DetailScreenModel,GitHubApiError>) -> Void) {
     
 
-    dispatchGroup.enter()
+    
+    DispatchQueue.global().async(group: dispatchGroup, qos: .utility) {
+      self.dispatchGroup.enter()
+      print("Загрузка Юзеров")
+          self.fetchUser { (result) in
+              
+              switch result {
+              case .success(let detailModel):
+      
+                print("Загрузка Юзеров законченна успешно")
+                self.detailModel = detailModel
+              case .failure(let error):
+      
+                self.error = error
+              }
+              self.dispatchGroup.leave()
 
-//    print("Загрузка Юзеров")
-      self.fetchUser { (result) in
-        
-//     print("Загрузка Юзеров законченна")
-        switch result {
-        case .success(let detailModel):
-//          print(detailModel)
-//          print("Загрузка Юзеров законченна успешно")
-          self.detailModel = detailModel
-        case .failure(let error):
-//          print("Загрузка Юзеров законченна с ошибкой")
-          self.error = error
-        }
-        self.dispatchGroup.leave()
-
-      }
-
-    dispatchGroup.enter()
-//    print("Async code")
-
-
-//     print("Загрузка Repos")
-      self.fetchRepos{ (result) in
-        
-//        print("Загрузка Repos законченна")
+            }
+    }
+    
+    DispatchQueue.global().async(group: dispatchGroup, qos: .utility) {
+      print("Загрузка repos")
+      self.dispatchGroup.enter()
+       self.fetchRepos{ (result) in
+              
+        print("Загрузка Repos законченна")
         switch result {
         case .success(let repos):
-//          print(repos)
           self.repos = repos
         case .failure(let error):
           self.error = error
         }
         self.dispatchGroup.leave()
       }
+    }
+
+     
 
     dispatchGroup.notify(queue: .main) {
       print("Загрузка всех данных Загрузились")
-      DispatchQueue.main.async {
-        if let error = self.error {
+
+          if let error = self.error { complatition(.failure(error))}
           
-          complatition(.failure(error))
-          
-        } else {
-          
-          let detailScreenModel = DetailScreenModel(details: self.detailModel, repos: self.repos)
-          
-          complatition(.success(detailScreenModel))
-          
+          else {
+            
+            let detailScreenModel = DetailScreenModel(details: self.detailModel, repos: self.repos)
+            
+            complatition(.success(detailScreenModel))
+            
         }
-      }
+
+
 
     }
   }

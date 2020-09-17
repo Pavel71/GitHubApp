@@ -94,12 +94,19 @@ extension DetailsViewController {
          switch result {
          case .failure(let error):
            print("Detail Data Fetch Error",error)
+//           RunLoop.main.perform(inModes: [.common]) {
+//            self.showAlert(message: error.localizedDescription)
+//           }
+          
+           
          case .success(let detailScreenModel):
            print("Succes")
            
-           self.headerView.configure(viewModel: detailScreenModel.details)
-           self.repos = detailScreenModel.repos ?? []
-           self.tableView.reloadData()
+            self.headerView.configure(viewModel: detailScreenModel.details)
+            self.repos = detailScreenModel.repos ?? []
+            self.tableView.reloadData()
+          
+           
          }
          
        }

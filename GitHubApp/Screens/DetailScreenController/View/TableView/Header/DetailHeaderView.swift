@@ -176,6 +176,14 @@ class DetailHeaderView: UIView {
     // Имя должно занять все место какое есть если что
     nameLabel.setContentHuggingPriority(.required, for: .vertical)
     nameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+    
+    
+    locationLabel.setContentHuggingPriority(.required, for: .vertical)
+    locationLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+    
+    loginLabel.setContentHuggingPriority(.required, for: .vertical)
+    loginLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+    
   }
   
   private func addSubViews() {
