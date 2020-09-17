@@ -45,7 +45,7 @@ class MainViewController: UIViewController {
   
   // MARK: Workers
   
-  let imageCash: ImageCachWorker! = ServiceLocator.shared.getService()
+  let imageCashWorker: ImageCachWorker! = ServiceLocator.shared.getService()
   
   // MARK: DataSource
   
@@ -149,7 +149,7 @@ class MainViewController: UIViewController {
           else {return}
         
         // Сохраним в кешик
-        self.imageCash.setImage(image: image!, key: url.absoluteString)
+        self.imageCashWorker.setImage(image: image!, key: url.absoluteString)
         // Обновим ячеечку
         cell.updateImageViewWhenLoaded(image)
         
@@ -173,7 +173,7 @@ extension MainViewController: UITableViewDataSource {
     cell.configure(viewModel: user)
     
     // Если есть в кеше то достаем оттуда
-    if let imageFromCache = imageCash.getImage(key: user.avatarUrl.absoluteString) {
+    if let imageFromCache = imageCashWorker.getImage(key: user.avatarUrl.absoluteString) {
       
       cell.setImageToAvatarImageView(imageFromCache)
 
@@ -217,7 +217,7 @@ extension MainViewController: UITableViewDelegate {
     let user = users[indexPath.row]
     
     // в кеше нет картинки
-     if imageCache.object(forKey: user.avatarUrl.absoluteString as NSString) == nil {
+    if imageCashWorker.getImage(key: user.avatarUrl.absoluteString) == nil {
 //      print("Load Ava WIll Display",indexPath)
       loadAvatarImage(url: user.avatarUrl, indexPath: indexPath)
        }
@@ -323,7 +323,7 @@ extension MainViewController :  UISearchBarDelegate{
   
   func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
     
-    imageCache.removeAllObjects()
+    imageCashWorker.clearCash()
     // Нужно скинуть старые операции
     viewModel.cancelAllAvatarDownLoadOperations()
     viewModel.cancelSearchingUsersOperation() // так как юзер будет вводить новые данные

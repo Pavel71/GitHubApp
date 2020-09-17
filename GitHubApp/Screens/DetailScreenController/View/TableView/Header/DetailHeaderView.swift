@@ -116,11 +116,6 @@ class DetailHeaderView: UIView {
   }()
   
   private lazy var locationHStack : UIStackView = {
-    
-//    let vStack = UIStackView(arrangedSubviews: [locationLabel])
-//    vStack.distribution = .fill
-//    vStack.alignment    = .fill
-//    vStack.axis         = .vertical
     locationLabel.numberOfLines = 0
     locationLabel.lineBreakMode = .byCharWrapping
     
@@ -134,13 +129,6 @@ class DetailHeaderView: UIView {
   
   private lazy var createdHStack : UIStackView = {
      
-//     let vStack = UIStackView(arrangedSubviews: [createdLabel])
-//     vStack.distribution = .fill
-//     vStack.alignment    = .fill
-//     vStack.axis         = .vertical
-     createdLabel.numberOfLines = 0
-     createdLabel.lineBreakMode = .byCharWrapping
-     
      let stackView = UIStackView(arrangedSubviews: [createdTitleLabel,createdLabel])
      stackView.axis      = .horizontal
      stackView.alignment = .firstBaseline
@@ -149,7 +137,19 @@ class DetailHeaderView: UIView {
      return stackView
    }()
   
-  private lazy var loginHStack = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel,aligment: .firstBaseline)
+  private lazy var loginHStack : UIStackView = {
+    loginLabel.numberOfLines = 0
+    loginLabel.lineBreakMode = .byCharWrapping
+    
+    let stackView = UIStackView(arrangedSubviews: [loginTitleLabel,loginLabel])
+    stackView.axis      = .horizontal
+    stackView.alignment = .firstBaseline
+    stackView.spacing   = 5
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    return stackView
+  }()
+  
+//  private lazy var loginHStack = createSimpleHStack(view1: loginTitleLabel, view2: loginLabel,aligment: .firstBaseline)
   
   
   
@@ -173,16 +173,12 @@ class DetailHeaderView: UIView {
       $0.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
-    // Имя должно занять все место какое есть если что
-    nameLabel.setContentHuggingPriority(.required, for: .vertical)
-    nameLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+    // Имя должно занять все место какое есть если что по вертикале
+    [locationLabel,nameLabel].forEach {
+      $0.setContentHuggingPriority(.required, for: .vertical)
+      $0.setContentCompressionResistancePriority(.required, for: .vertical)
+    }
     
-    
-    locationLabel.setContentHuggingPriority(.required, for: .vertical)
-    locationLabel.setContentCompressionResistancePriority(.required, for: .vertical)
-    
-    loginLabel.setContentHuggingPriority(.required, for: .vertical)
-    loginLabel.setContentCompressionResistancePriority(.required, for: .vertical)
     
   }
   

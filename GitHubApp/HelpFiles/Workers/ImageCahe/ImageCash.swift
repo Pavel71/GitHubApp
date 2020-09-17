@@ -14,7 +14,7 @@ final class ImageCachWorker {
   // ПО идеи это нужно сделать потоко безопасно! как мне кажется!
   static let shared  = ImageCachWorker()
   
-  let imageCache = NSCache<NSString, UIImage>()
+  private let imageCache = NSCache<NSString, UIImage>()
   
   func setImage(image: UIImage,key: String) {
     imageCache.setObject(image, forKey: key as NSString)
@@ -23,4 +23,9 @@ final class ImageCachWorker {
   func getImage(key: String) -> UIImage? {
     return imageCache.object(forKey: key as NSString)
   }
+  
+  func clearCash() {
+    imageCache.removeAllObjects()
+  }
+  
 }
